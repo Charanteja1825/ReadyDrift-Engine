@@ -1,125 +1,302 @@
 
-import { User, SkillGapReport, ExamResult, InterviewSession, DailyLog } from '../types';
+// import { User, SkillGapReport, ExamResult, InterviewSession, DailyLog } from '../types';
 
-/**
- * MOCK DATABASE IMPLEMENTATION
- * In a real Replit environment, these would be fetch calls to a Node/Express backend.
- * We use localStorage to persist per-user state for the demo.
- */
+// /**
+//  * MOCK DATABASE IMPLEMENTATION
+//  * In a real Replit environment, these would be fetch calls to a Node/Express backend.
+//  * We use localStorage to persist per-user state for the demo.
+//  */
 
-const STORAGE_KEYS = {
-  USERS: 'cr_users',
-  SKILL_REPORTS: 'cr_skill_reports',
-  EXAM_RESULTS: 'cr_exam_results',
-  INTERVIEWS: 'cr_interviews',
-  LOGS: 'cr_logs',
-  SESSION: 'cr_current_user'
-};
+// const STORAGE_KEYS = {
+//   USERS: 'cr_users',
+//   SKILL_REPORTS: 'cr_skill_reports',
+//   EXAM_RESULTS: 'cr_exam_results',
+//   INTERVIEWS: 'cr_interviews',
+//   LOGS: 'cr_logs',
+//   SESSION: 'cr_current_user'
+// };
 
-const get = <T,>(key: string): T[] => JSON.parse(localStorage.getItem(key) || '[]');
-const save = (key: string, data: any) => localStorage.setItem(key, JSON.stringify(data));
+// const get = <T,>(key: string): T[] => JSON.parse(localStorage.getItem(key) || '[]');
+// const save = (key: string, data: any) => localStorage.setItem(key, JSON.stringify(data));
+
+// export const db = {
+//   // Auth
+//   async signup(user: Omit<User, 'id' | 'createdAt'>): Promise<User> {
+//     const users = get<User>(STORAGE_KEYS.USERS);
+//     const newUser: User = {
+//       ...user,
+//       id: Math.random().toString(36).substr(2, 9),
+//       createdAt: new Date().toISOString()
+//     };
+//     users.push(newUser);
+//     save(STORAGE_KEYS.USERS, users);
+//     return newUser;
+//   },
+
+//   async signin(email: string): Promise<User | null> {
+//     const users = get<User>(STORAGE_KEYS.USERS);
+//     return users.find(u => u.email === email) || null;
+//   },
+
+//   // Skill Reports
+//   async saveSkillReport(report: Omit<SkillGapReport, 'id' | 'createdAt'>): Promise<SkillGapReport> {
+//     const reports = get<SkillGapReport>(STORAGE_KEYS.SKILL_REPORTS);
+//     const newReport = { ...report, id: Date.now().toString(), createdAt: new Date().toISOString() };
+//     reports.push(newReport);
+//     save(STORAGE_KEYS.SKILL_REPORTS, reports);
+//     return newReport;
+//   },
+
+//   async getSkillReports(userId: string): Promise<SkillGapReport[]> {
+//     return get<SkillGapReport>(STORAGE_KEYS.SKILL_REPORTS).filter(r => r.userId === userId);
+//   },
+
+//   // Exams
+//   async saveExamResult(result: Omit<ExamResult, 'id' | 'createdAt'>): Promise<ExamResult> {
+//     const results = get<ExamResult>(STORAGE_KEYS.EXAM_RESULTS);
+//     const newResult = { ...result, id: Date.now().toString(), createdAt: new Date().toISOString() };
+//     results.push(newResult);
+//     save(STORAGE_KEYS.EXAM_RESULTS, results);
+//     return newResult;
+//   },
+
+//   async getExamResults(userId: string): Promise<ExamResult[]> {
+//     return get<ExamResult>(STORAGE_KEYS.EXAM_RESULTS).filter(r => r.userId === userId);
+//   },
+
+//   // Interviews
+//   async saveInterview(session: Omit<InterviewSession, 'id' | 'createdAt'>): Promise<InterviewSession> {
+//     const sessions = get<InterviewSession>(STORAGE_KEYS.INTERVIEWS);
+//     const newSession = { ...session, id: Date.now().toString(), createdAt: new Date().toISOString() };
+//     sessions.push(newSession);
+//     save(STORAGE_KEYS.INTERVIEWS, sessions);
+//     return newSession;
+//   },
+
+//   async getInterviews(userId: string): Promise<InterviewSession[]> {
+//     return get<InterviewSession>(STORAGE_KEYS.INTERVIEWS).filter(s => s.userId === userId);
+//   },
+
+//   // Daily Logs
+//   async saveDailyLog(userId: string, hours: number): Promise<DailyLog> {
+//     const logs = get<DailyLog>(STORAGE_KEYS.LOGS);
+//     const newLog = { userId, hours, date: new Date().toISOString().split('T')[0], id: Date.now().toString() };
+//     // Update if exists for today
+//     const index = logs.findIndex(l => l.userId === userId && l.date === newLog.date);
+//     if (index !== -1) {
+//       logs[index].hours += hours;
+//     } else {
+//       logs.push(newLog);
+//     }
+//     save(STORAGE_KEYS.LOGS, logs);
+//     return newLog;
+//   },
+
+//   async getLogs(userId: string): Promise<DailyLog[]> {
+//     return get<DailyLog>(STORAGE_KEYS.LOGS).filter(l => l.userId === userId);
+//   },
+
+//   // Aggregated Stats
+//   async getDashboardStats(userId: string) {
+//     const exams = await this.getExamResults(userId);
+//     const logs = await this.getLogs(userId);
+    
+//     const avgScore = exams.length > 0 ? exams.reduce((acc, curr) => acc + curr.score, 0) / exams.length : 0;
+//     const studyHoursThisWeek = logs.reduce((acc, curr) => {
+//       const logDate = new Date(curr.date);
+//       const weekAgo = new Date();
+//       weekAgo.setDate(weekAgo.getDate() - 7);
+//       return logDate > weekAgo ? acc + curr.hours : acc;
+//     }, 0);
+
+//     // Calc streak
+//     const sortedLogs = logs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+//     let streak = 0;
+//     let today = new Date();
+//     today.setHours(0,0,0,0);
+    
+//     for(let log of sortedLogs) {
+//       const d = new Date(log.date);
+//       d.setHours(0,0,0,0);
+//       const diff = (today.getTime() - d.getTime()) / (1000 * 3600 * 24);
+//       if(diff === streak) streak++;
+//       else break;
+//     }
+
+//     return {
+//       totalExams: exams.length,
+//       avgScore: Math.round(avgScore),
+//       studyHoursThisWeek,
+//       streak
+//     };
+//   }
+// };
+
+
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where
+} from "firebase/firestore";
+
+import { firestore } from "./firebase";
+import { User, SkillGapReport, ExamResult, InterviewSession, DailyLog } from "../types";
 
 export const db = {
-  // Auth
-  async signup(user: Omit<User, 'id' | 'createdAt'>): Promise<User> {
-    const users = get<User>(STORAGE_KEYS.USERS);
+  // ---------- USERS ----------
+  async signup(user: Omit<User, "id" | "createdAt">): Promise<User> {
     const newUser: User = {
       ...user,
-      id: Math.random().toString(36).substr(2, 9),
+      id: crypto.randomUUID(),
       createdAt: new Date().toISOString()
     };
-    users.push(newUser);
-    save(STORAGE_KEYS.USERS, users);
+
+    await addDoc(collection(firestore, "users"), newUser);
     return newUser;
   },
 
   async signin(email: string): Promise<User | null> {
-    const users = get<User>(STORAGE_KEYS.USERS);
-    return users.find(u => u.email === email) || null;
+    const q = query(
+      collection(firestore, "users"),
+      where("email", "==", email)
+    );
+    const snap = await getDocs(q);
+    return snap.empty ? null : (snap.docs[0].data() as User);
   },
 
-  // Skill Reports
-  async saveSkillReport(report: Omit<SkillGapReport, 'id' | 'createdAt'>): Promise<SkillGapReport> {
-    const reports = get<SkillGapReport>(STORAGE_KEYS.SKILL_REPORTS);
-    const newReport = { ...report, id: Date.now().toString(), createdAt: new Date().toISOString() };
-    reports.push(newReport);
-    save(STORAGE_KEYS.SKILL_REPORTS, reports);
-    return newReport;
+  // ---------- SKILL GAP ----------
+  async saveSkillReport(
+    report: Omit<SkillGapReport, "id" | "createdAt">
+  ): Promise<SkillGapReport> {
+    const createdAt = new Date().toISOString();
+    const docRef = await addDoc(collection(firestore, "skillReports"), {
+      ...report,
+      createdAt
+    });
+
+    return { ...report, id: docRef.id, createdAt };
   },
 
   async getSkillReports(userId: string): Promise<SkillGapReport[]> {
-    return get<SkillGapReport>(STORAGE_KEYS.SKILL_REPORTS).filter(r => r.userId === userId);
+    const q = query(
+      collection(firestore, "skillReports"),
+      where("userId", "==", userId)
+    );
+    const snap = await getDocs(q);
+
+    return snap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as SkillGapReport[];
   },
 
-  // Exams
-  async saveExamResult(result: Omit<ExamResult, 'id' | 'createdAt'>): Promise<ExamResult> {
-    const results = get<ExamResult>(STORAGE_KEYS.EXAM_RESULTS);
-    const newResult = { ...result, id: Date.now().toString(), createdAt: new Date().toISOString() };
-    results.push(newResult);
-    save(STORAGE_KEYS.EXAM_RESULTS, results);
-    return newResult;
+  // ---------- EXAMS ----------
+  async saveExamResult(
+    result: Omit<ExamResult, "id" | "createdAt">
+  ): Promise<ExamResult> {
+    const createdAt = new Date().toISOString();
+    const docRef = await addDoc(collection(firestore, "examResults"), {
+      ...result,
+      createdAt
+    });
+
+    return { ...result, id: docRef.id, createdAt };
   },
 
   async getExamResults(userId: string): Promise<ExamResult[]> {
-    return get<ExamResult>(STORAGE_KEYS.EXAM_RESULTS).filter(r => r.userId === userId);
+    const q = query(
+      collection(firestore, "examResults"),
+      where("userId", "==", userId)
+    );
+    const snap = await getDocs(q);
+
+    return snap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as ExamResult[];
   },
 
-  // Interviews
-  async saveInterview(session: Omit<InterviewSession, 'id' | 'createdAt'>): Promise<InterviewSession> {
-    const sessions = get<InterviewSession>(STORAGE_KEYS.INTERVIEWS);
-    const newSession = { ...session, id: Date.now().toString(), createdAt: new Date().toISOString() };
-    sessions.push(newSession);
-    save(STORAGE_KEYS.INTERVIEWS, sessions);
-    return newSession;
+  // ---------- INTERVIEWS ----------
+  async saveInterview(
+    session: Omit<InterviewSession, "id" | "createdAt">
+  ): Promise<InterviewSession> {
+    const createdAt = new Date().toISOString();
+    const docRef = await addDoc(collection(firestore, "interviews"), {
+      ...session,
+      createdAt
+    });
+
+    return { ...session, id: docRef.id, createdAt };
   },
 
   async getInterviews(userId: string): Promise<InterviewSession[]> {
-    return get<InterviewSession>(STORAGE_KEYS.INTERVIEWS).filter(s => s.userId === userId);
+    const q = query(
+      collection(firestore, "interviews"),
+      where("userId", "==", userId)
+    );
+    const snap = await getDocs(q);
+
+    return snap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as InterviewSession[];
   },
 
-  // Daily Logs
+  // ---------- DAILY LOGS ----------
   async saveDailyLog(userId: string, hours: number): Promise<DailyLog> {
-    const logs = get<DailyLog>(STORAGE_KEYS.LOGS);
-    const newLog = { userId, hours, date: new Date().toISOString().split('T')[0], id: Date.now().toString() };
-    // Update if exists for today
-    const index = logs.findIndex(l => l.userId === userId && l.date === newLog.date);
-    if (index !== -1) {
-      logs[index].hours += hours;
-    } else {
-      logs.push(newLog);
-    }
-    save(STORAGE_KEYS.LOGS, logs);
-    return newLog;
+    const log: DailyLog = {
+      id: crypto.randomUUID(),
+      userId,
+      hours,
+      date: new Date().toISOString().split("T")[0]
+    };
+
+    await addDoc(collection(firestore, "dailyLogs"), log);
+    return log;
   },
 
   async getLogs(userId: string): Promise<DailyLog[]> {
-    return get<DailyLog>(STORAGE_KEYS.LOGS).filter(l => l.userId === userId);
+    const q = query(
+      collection(firestore, "dailyLogs"),
+      where("userId", "==", userId)
+    );
+    const snap = await getDocs(q);
+
+    return snap.docs.map(doc => doc.data()) as DailyLog[];
   },
 
-  // Aggregated Stats
+  // ---------- DASHBOARD (same logic) ----------
   async getDashboardStats(userId: string) {
     const exams = await this.getExamResults(userId);
     const logs = await this.getLogs(userId);
-    
-    const avgScore = exams.length > 0 ? exams.reduce((acc, curr) => acc + curr.score, 0) / exams.length : 0;
-    const studyHoursThisWeek = logs.reduce((acc, curr) => {
-      const logDate = new Date(curr.date);
+
+    const avgScore =
+      exams.length > 0
+        ? exams.reduce((a, c) => a + c.score, 0) / exams.length
+        : 0;
+
+    const studyHoursThisWeek = logs.reduce((acc, log) => {
+      const logDate = new Date(log.date);
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
-      return logDate > weekAgo ? acc + curr.hours : acc;
+      return logDate > weekAgo ? acc + log.hours : acc;
     }, 0);
 
-    // Calc streak
-    const sortedLogs = logs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const sortedLogs = logs.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
     let streak = 0;
     let today = new Date();
-    today.setHours(0,0,0,0);
-    
-    for(let log of sortedLogs) {
+    today.setHours(0, 0, 0, 0);
+
+    for (const log of sortedLogs) {
       const d = new Date(log.date);
-      d.setHours(0,0,0,0);
-      const diff = (today.getTime() - d.getTime()) / (1000 * 3600 * 24);
-      if(diff === streak) streak++;
+      d.setHours(0, 0, 0, 0);
+      const diff = (today.getTime() - d.getTime()) / 86400000;
+      if (diff === streak) streak++;
       else break;
     }
 

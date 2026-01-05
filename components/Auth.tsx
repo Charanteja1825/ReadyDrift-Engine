@@ -29,6 +29,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         if (user) {
           onLogin(user);
         } else {
+          
           setError('User not found. Please signup.');
         }
       } else {
@@ -39,6 +40,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         onLogin(newUser);
       }
     } catch (err) {
+        console.error("LOGIN ERROR:", err);
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
