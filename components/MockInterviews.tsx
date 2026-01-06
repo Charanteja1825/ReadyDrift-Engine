@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { User, InterviewSession } from '../types';
 import { generateInterviewFeedback } from '../services/ai';
 import { db } from '../services/db';
-import { Video, VideoOff, Mic, MicOff, Play, CheckCircle, Loader2, Award, Zap, Smile } from 'lucide-react';
+import { Video, VideoOff, Mic, MicOff, Play, Pause, CheckCircle, Loader2, Award, Zap, Smile } from 'lucide-react';
 
 interface MockInterviewsProps {
   user: User;
@@ -14,6 +14,21 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [recentSessions, setRecentSessions] = useState<InterviewSession[]>([]);
+  const [paused, setPaused] = useState(false);
+  const [elapsed, setElapsed] = useState(0); // seconds
+  const timerRef = useRef<number | null>(null);
+
+  // Device checks / preview
+  const [deviceStatus, setDeviceStatus] = useState({ cameraAvailable: false, micAvailable: false, permissionError: false });
+  const [testingPreview, setTestingPreview] = useState(false);
+  const previewVideoRef = useRef<HTMLVideoElement>(null);
+  const [previewStream, setPreviewStream] = useState<MediaStream | null>(null);
+
+  // Track whether tracks are enabled
+  const [cameraOn, setCameraOn] = useState(true);
+  const [micOn, setMicOn] = useState(true);
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Effect to handle attaching the stream to the video element once it is rendered
@@ -41,6 +56,11 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
       setStream(s);
       setIsActive(true);
       setSession(null);
+      setPaused(false);
+      setElapsed(0);
+      setCameraOn(true);
+      setMicOn(true);
+      startTimer();
     } catch (err) {
       console.error("Media error:", err);
       alert("Please allow camera and microphone access to start your mock interview.");
@@ -49,6 +69,7 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
 
   const endInterview = async () => {
     setLoading(true);
+    stopTimer();
     
     // Stop the camera/mic tracks
     if (stream) {
@@ -58,18 +79,147 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
     
     try {
       const aiFeedback = await generateInterviewFeedback();
-      const newSession = await db.saveInterview({
+      const toSave = {
         userId: user.id,
-        ...aiFeedback
-      });
+        ...aiFeedback,
+        duration: elapsed
+      } as any;
+      const newSession = await db.saveInterview(toSave);
       setSession(newSession);
       setIsActive(false);
+      // refresh recent sessions
+      loadRecentSessions();
     } catch (err) {
       console.error("AI Analysis error:", err);
     } finally {
       setLoading(false);
     }
   };
+
+  // --- helper: fetch recent interviews (last 5) ---
+  const loadRecentSessions = async () => {
+    try {
+      const all = await db.getInterviews(user.id);
+      // sort by createdAt desc
+      const sorted = (all || []).sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setRecentSessions(sorted.slice(0,5));
+    } catch (err) {
+      console.error('Failed to load interviews', err);
+    }
+  };
+
+  // --- device checks & previews ---
+  const checkDevices = async () => {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      setDeviceStatus({
+        cameraAvailable: devices.some(d => d.kind === 'videoinput'),
+        micAvailable: devices.some(d => d.kind === 'audioinput'),
+        permissionError: false
+      });
+    } catch (err) {
+      console.error('Device check failed', err);
+      setDeviceStatus(prev => ({ ...prev, permissionError: true }));
+    }
+  };
+
+  const previewCamera = async () => {
+    try {
+      setTestingPreview(true);
+      const s = await navigator.mediaDevices.getUserMedia({ video: true });
+      setPreviewStream(s);
+      if (previewVideoRef.current) previewVideoRef.current.srcObject = s;
+    } catch (err) {
+      console.error('Preview failed', err);
+      alert('Camera preview failed. Make sure permissions are allowed.');
+      setTestingPreview(false);
+    }
+  };
+
+  const stopPreview = () => {
+    if (previewStream) {
+      previewStream.getTracks().forEach(t => t.stop());
+      setPreviewStream(null);
+    }
+    if (previewVideoRef.current) previewVideoRef.current.srcObject = null;
+    setTestingPreview(false);
+  };
+
+  const testMic = async () => {
+    try {
+      const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const ok = s.getAudioTracks().length > 0;
+      s.getTracks().forEach(t => t.stop());
+      alert(ok ? 'Microphone detected and working' : 'No microphone found');
+      setDeviceStatus(prev => ({ ...prev, micAvailable: ok }));
+    } catch (err) {
+      console.error('Mic test failed', err);
+      alert('Microphone not available or permission denied');
+      setDeviceStatus(prev => ({ ...prev, micAvailable: false, permissionError: true }));
+    }
+  };
+
+  // toggle mic/video during live session (do not stop stream)
+  const toggleMic = () => {
+    if (!stream) return;
+    const audioTracks = stream.getAudioTracks();
+    audioTracks.forEach(t => t.enabled = !t.enabled);
+    const now = !(audioTracks.length > 0 && audioTracks[0].enabled === false);
+    setMicOn(now);
+  };
+
+  const toggleVideo = () => {
+    if (!stream) return;
+    const videoTracks = stream.getVideoTracks();
+    videoTracks.forEach(t => t.enabled = !t.enabled);
+    const now = !(videoTracks.length > 0 && videoTracks[0].enabled === false);
+    setCameraOn(now);
+  };
+
+  const pauseInterview = () => {
+    if (!stream) return;
+    stream.getTracks().forEach(t => t.enabled = false);
+    setPaused(true);
+    setCameraOn(false);
+    setMicOn(false);
+    stopTimer();
+  };
+
+  const resumeInterview = () => {
+    if (!stream) return;
+    stream.getTracks().forEach(t => t.enabled = true);
+    setPaused(false);
+    setCameraOn(true);
+    setMicOn(true);
+    startTimer();
+  };
+
+  const startTimer = () => {
+    stopTimer();
+    timerRef.current = window.setInterval(() => {
+      setElapsed(e => e + 1);
+    }, 1000) as unknown as number;
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current as number);
+      timerRef.current = null;
+    }
+  };
+
+  // Ensure device status and recent sessions are loaded on mount
+  useEffect(() => {
+    checkDevices();
+    loadRecentSessions();
+
+    return () => {
+      stopTimer();
+      if (previewStream) {
+        previewStream.getTracks().forEach(t => t.stop());
+      }
+    };
+  }, []);
 
   return (
     <div className="space-y-8 animate-in slide-in-from-right duration-500">
@@ -88,7 +238,34 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 Ensure you are in a well-lit room with a stable internet connection. 
                 The AI will analyze your facial expressions, confidence markers, and clarity.
               </p>
+
+              <div className="mt-6 flex items-center justify-center gap-4">
+                <div className="flex items-center gap-2">
+                  {deviceStatus.cameraAvailable ? <Video className="w-4 h-4 text-emerald-400" /> : <VideoOff className="w-4 h-4 text-rose-500" />}
+                  <span className="text-sm text-slate-400">Camera {deviceStatus.cameraAvailable ? 'Ready' : 'Not found'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {deviceStatus.micAvailable ? <Mic className="w-4 h-4 text-emerald-400" /> : <MicOff className="w-4 h-4 text-rose-500" />}
+                  <span className="text-sm text-slate-400">Microphone {deviceStatus.micAvailable ? 'Ready' : 'Not found'}</span>
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <button onClick={checkDevices} className="px-3 py-2 rounded-xl bg-slate-800 text-slate-100">Check Devices</button>
+                <button onClick={previewCamera} className="px-3 py-2 rounded-xl bg-slate-800 text-slate-100">Preview Camera</button>
+                <button onClick={testMic} className="px-3 py-2 rounded-xl bg-slate-800 text-slate-100">Test Microphone</button>
+              </div>
+
+              {testingPreview && (
+                <div className="mt-4 flex flex-col items-center gap-3">
+                  <video ref={previewVideoRef} autoPlay playsInline muted className="w-64 h-40 object-cover rounded-lg border border-slate-700" />
+                  <div>
+                    <button onClick={stopPreview} className="px-3 py-2 rounded-xl bg-rose-600 text-white">Stop Preview</button>
+                  </div>
+                </div>
+              )}
             </div>
+
             <button
               onClick={startInterview}
               className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-12 py-4 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center gap-2 mx-auto"
@@ -129,9 +306,25 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                   <span className="text-xs font-bold text-white">Detecting</span>
                 </div>
                 <div className="flex items-center gap-2 ml-2">
-                  <button className="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors">
-                    <Mic className="w-5 h-5" />
+                  {/* Video toggle */}
+                  <button onClick={toggleVideo} className={`p-3 rounded-xl ${cameraOn ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-slate-700/30 text-slate-400' } transition-colors`}>
+                    {cameraOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
                   </button>
+
+                  {/* Mic toggle */}
+                  <button onClick={toggleMic} className={`p-3 rounded-xl ${micOn ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-slate-700/30 text-slate-400' } transition-colors`}>
+                    {micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+                  </button>
+
+                  {/* Pause / Resume */}
+                  {!paused ? (
+                    <button onClick={pauseInterview} className="px-3 py-2 rounded-xl bg-yellow-500 text-black font-bold">Pause</button>
+                  ) : (
+                    <button onClick={resumeInterview} className="px-3 py-2 rounded-xl bg-emerald-500 text-white font-bold flex items-center gap-2"><Play className="w-4 h-4" /> Resume</button>
+                  )}
+
+                  <div className="px-3 text-sm text-slate-300">Elapsed: {Math.floor(elapsed / 60)}:{`${(elapsed % 60).toString().padStart(2,'0')}`}</div>
+
                   <button 
                     onClick={endInterview}
                     disabled={loading}
@@ -155,6 +348,21 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
 
         {session && (
           <div className="animate-in fade-in zoom-in-95 duration-700 space-y-8 pb-12">
+
+            {/* Recent performance (last 5) */}
+            <div className="flex items-center gap-3 mb-2">
+              <h3 className="text-sm text-slate-400 font-bold uppercase tracking-widest">Recent (last 5)</h3>
+              <div className="flex gap-3 overflow-x-auto">
+                {recentSessions.length === 0 && <span className="text-slate-500 text-sm">No history yet</span>}
+                {recentSessions.map((rs) => (
+                  <button key={rs.id} onClick={() => setSession(rs)} className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-2xl text-left text-sm hover:bg-slate-800">
+                    <div className="text-slate-300 font-bold">{new Date(rs.createdAt).toLocaleDateString()}</div>
+                    <div className="text-slate-400 text-xs">Confidence: <span className="font-bold text-emerald-300">{rs.confidenceScore}%</span></div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { label: 'Confidence Score', value: session.confidenceScore, icon: Award, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },

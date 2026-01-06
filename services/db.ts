@@ -139,6 +139,7 @@ import {
   getDocs,
   query,
   where
+  , updateDoc
 } from "firebase/firestore";
 
 import { firestore } from "./firebase";
@@ -244,13 +245,83 @@ export const db = {
     })) as InterviewSession[];
   },
 
+  // ---------- USER HELPERS ----------
+  async getUserById(id: string): Promise<User | null> {
+    const q = query(
+      collection(firestore, "users"),
+      where("id", "==", id)
+    );
+    const snap = await getDocs(q);
+    return snap.empty ? null : (snap.docs[0].data() as User);
+  },
+
+  async getUsersByInterests(userId: string, interests: string[], limit = 10): Promise<User[]> {
+    if (!interests || interests.length === 0) return [];
+    // Use array-contains-any to find users that share any of the interests
+    const q = query(
+      collection(firestore, "users"),
+      where("interests", "array-contains-any", interests)
+    );
+    const snap = await getDocs(q);
+    const users = snap.docs.map(doc => doc.data() as User).filter(u => u.id !== userId);
+    return users.slice(0, limit);
+  },
+
+  async getAllInterests(): Promise<string[]> {
+    const snap = await getDocs(collection(firestore, "users"));
+    const all: string[] = [];
+    snap.docs.forEach(d => {
+      const u = d.data() as User;
+      if (u.interests && Array.isArray(u.interests)) {
+        all.push(...u.interests);
+      }
+    });
+    // return unique interests
+    return Array.from(new Set(all)).slice(0, 200);
+  },
+
+  async toggleFavorite(userId: string, targetId: string): Promise<User | null> {
+    // Find user doc by id
+    const q = query(collection(firestore, "users"), where("id", "==", userId));
+    const snap = await getDocs(q);
+    if (snap.empty) return null;
+    const docRef = snap.docs[0].ref;
+    const user = snap.docs[0].data() as User;
+    const favs = Array.isArray(user.favorites) ? user.favorites.slice() : [];
+    const idx = favs.indexOf(targetId);
+    if (idx === -1) favs.push(targetId); else favs.splice(idx, 1);
+    await updateDoc(docRef, { favorites: favs });
+    const updatedSnap = await getDocs(query(collection(firestore, "users"), where("id", "==", userId)));
+    return updatedSnap.docs[0].data() as User;
+  },
+
   // ---------- DAILY LOGS ----------
   async saveDailyLog(userId: string, hours: number): Promise<DailyLog> {
+    const today = new Date().toISOString().split("T")[0];
+
+    // Check if there's an existing log for the user for today
+    const q = query(
+      collection(firestore, "dailyLogs"),
+      where("userId", "==", userId),
+      where("date", "==", today)
+    );
+    const snap = await getDocs(q);
+
+    if (!snap.empty) {
+      // Update the first matching doc by adding hours
+      const doc = snap.docs[0];
+      const existing = doc.data() as DailyLog;
+      const newHours = (existing.hours || 0) + hours;
+      await updateDoc(doc.ref, { hours: newHours });
+      return { ...existing, hours: newHours } as DailyLog;
+    }
+
+    // Create a new log for today
     const log: DailyLog = {
       id: crypto.randomUUID(),
       userId,
       hours,
-      date: new Date().toISOString().split("T")[0]
+      date: today
     };
 
     await addDoc(collection(firestore, "dailyLogs"), log);
@@ -276,6 +347,52 @@ export const db = {
   return snap.empty ? null : (snap.docs[0].data() as User);
 }
 ,
+
+  async updateUser(user: Partial<User> & { uid?: string; id?: string }): Promise<User> {
+    // Try to find existing user by uid or id
+    let q;
+    if (user.uid) {
+      q = query(collection(firestore, "users"), where("uid", "==", user.uid));
+    } else if (user.id) {
+      q = query(collection(firestore, "users"), where("id", "==", user.id));
+    }
+
+    if (q) {
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const docRef = snap.docs[0].ref;
+        // Only update allowed fields
+        const dataToUpdate: any = {};
+        if (user.name !== undefined) dataToUpdate.name = user.name;
+        if (user.email !== undefined) dataToUpdate.email = user.email;
+        if (user.uid !== undefined) dataToUpdate.uid = user.uid;
+        if (user.linkedin !== undefined) dataToUpdate.linkedin = user.linkedin;
+        if (user.leetcode !== undefined) dataToUpdate.leetcode = user.leetcode;
+        if (user.github !== undefined) dataToUpdate.github = user.github;
+        if (user.interests !== undefined) dataToUpdate.interests = user.interests;
+        if (user.favorites !== undefined) dataToUpdate.favorites = user.favorites;
+
+        await updateDoc(docRef, dataToUpdate);
+        const updated = (await getDocs(query(collection(firestore, "users"), where("uid", "==", user.uid))))
+          .docs[0].data() as User;
+        return updated;
+      }
+    }
+
+    // If not found, create a new user doc
+    const newUser: User = {
+      id: crypto.randomUUID(),
+      uid: user.uid || '',
+      name: user.name || 'User',
+      email: user.email || '',
+      linkedin: user.linkedin || '',
+      leetcode: user.leetcode || '',
+      github: user.github || '',
+      createdAt: new Date().toISOString()
+    };
+    await addDoc(collection(firestore, "users"), newUser);
+    return newUser;
+  },
 
   // ---------- DASHBOARD (same logic) ----------
   async getDashboardStats(userId: string) {

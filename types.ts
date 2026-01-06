@@ -4,6 +4,13 @@ export interface User {
   uid: string; 
   name: string;
   email: string;
+  // Optional external profiles
+  linkedin?: string;
+  leetcode?: string;
+  github?: string;
+  // Interests and favorites
+  interests?: string[];
+  favorites?: string[];
   createdAt: string;
 }
 
@@ -51,6 +58,9 @@ export interface ExamResult {
   weakTopics: string[];
   results: {
     questionId: string;
+    questionText?: string;
+    correctAnswer?: string;
+    questionType?: string;
     userAnswer: string;
     isCorrect: boolean;
     explanation: string;
@@ -69,6 +79,8 @@ export interface InterviewSession {
     weaknesses: string[];
     tips: string[];
   };
+  // Duration of the interview in seconds (optional)
+  duration?: number;
   createdAt: string;
 }
 

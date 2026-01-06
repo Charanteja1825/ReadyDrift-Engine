@@ -14,9 +14,10 @@ import {
 
 interface AuthProps {
   onLogin: (user: User) => void;
+  notice?: string;
 }
 
-const Auth: React.FC<AuthProps> = ({ onLogin }) => {
+const Auth: React.FC<AuthProps> = ({ onLogin, notice }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -110,6 +111,8 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
           <p className="text-slate-400 text-center">Accelerate your career journey with AI insights</p>
         </div>
 
+        {/** Optional notice (e.g., login required to view a profile) */}
+        {notice && <div className="mb-4 text-sm text-slate-300 bg-slate-800 p-3 rounded">{notice}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div className="relative">
@@ -171,14 +174,32 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
       const fbUser = await signinWithGoogle();
 
     let user = await db.signinByUID(fbUser.uid);
-      if (!user) {
+      if (user) {
+        // Merge Firebase profile fields so the UI shows them immediately
+        const merged = {
+          ...user,
+          email: user.email || fbUser.email || '',
+          name: user.name || fbUser.displayName || user.name
+        } as any;
+
+        // If merged added/changed fields, persist them
+        const needsUpdate = (merged.email && merged.email !== user.email) || (fbUser.displayName && merged.name !== user.name);
+        if (needsUpdate) {
+          const updated = await db.updateUser({ uid: fbUser.uid, email: merged.email || undefined, name: merged.name || undefined });
+          user = updated;
+        } else {
+          user = merged;
+        }
+      } else {
+        // No Firestore user found — create one from Firebase profile
         user = await db.signup({
-           uid: fbUser.uid,
+          uid: fbUser.uid,
           name: fbUser.displayName || "User",
-          email: fbUser.email!
+          email: fbUser.email || ''
         });
       }
 
+      // Ensure we return a user with email/name populated to the app immediately
       onLogin(user);
     } catch (err) {
       setError("Google sign-in failed");

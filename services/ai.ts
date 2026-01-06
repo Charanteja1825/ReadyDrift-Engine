@@ -58,7 +58,7 @@ export async function generateSkillGapAnalysis(role: string, skills: string[], t
 export async function generateExam(type: string) {
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Generate a 5-question mock exam for ${type} including MCQs and basic coding theory questions.`,
+    contents: `Generate a 10-question mock exam for ${type} with exactly 5 MCQ questions and 5 coding questions. For each item include: id, type (mcq|coding), question text, options (for mcq), correctAnswer, and a short explanation. Ensure the questions are concise and suitable for a timed practice session.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {

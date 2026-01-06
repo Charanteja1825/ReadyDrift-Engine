@@ -14,6 +14,8 @@ const DriftAnalyzer: React.FC<DriftAnalyzerProps> = ({ user }) => {
   const [logs, setLogs] = useState<DailyLog[]>([]);
   const [exams, setExams] = useState<ExamResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [warning, setWarning] = useState<string | null>(null);
+  const [inputError, setInputError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -28,9 +30,32 @@ const DriftAnalyzer: React.FC<DriftAnalyzerProps> = ({ user }) => {
 
   const handleLogStudy = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const hoursNum = parseFloat(studyHours);
+    if (isNaN(hoursNum) || hoursNum <= 0) {
+      setInputError('Please enter a positive number of hours');
+      return;
+    }
+
+    setInputError(null);
+
+    // compute today's total if we add this entry
+    const today = new Date().toISOString().split('T')[0];
+    const todayLog = logs.find(l => l.date === today);
+    const newTotal = (todayLog?.hours || 0) + hoursNum;
+
+    if (newTotal > 24) {
+      // Do not persist to DB if total exceeds realistic 24-hour day
+      setWarning('Warning: total study hours for today would exceed 24 hours. Entry not saved.');
+      return;
+    }
+
+    // clear warning and proceed
+    setWarning(null);
+
     setLoading(true);
     try {
-      await db.saveDailyLog(user.id, parseFloat(studyHours));
+      await db.saveDailyLog(user.id, hoursNum);
       setStudyHours('');
       await fetchData();
     } catch (err) {
@@ -80,9 +105,11 @@ const DriftAnalyzer: React.FC<DriftAnalyzerProps> = ({ user }) => {
                    className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
                    placeholder="e.g. 4.5"
                    value={studyHours}
-                   onChange={(e) => setStudyHours(e.target.value)}
+                   onChange={(e) => { setStudyHours(e.target.value); setInputError(null); }}
                    required
                  />
++                {inputError && <p className="text-red-400 text-sm mt-2">{inputError}</p>}
++                {warning && <p className="text-amber-400 text-sm mt-2" role="alert" aria-live="polite">{warning}</p>}
                </div>
                <button
                  disabled={loading}
