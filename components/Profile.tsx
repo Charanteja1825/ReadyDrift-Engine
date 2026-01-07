@@ -135,12 +135,12 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
   return (
     <section className="max-w-4xl mx-auto bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl shadow-lg border border-gray-200">
       {/* Header Section */}
-      <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-gray-200 gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-1">Profile</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">Profile</h2>
           <p className="text-sm text-slate-500">Manage your professional information</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 self-start sm:self-auto">
           <a
             href={`${window.location.origin}/user/${user.id}`}
             target="_blank"
@@ -441,16 +441,16 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
           {editing ? (
             <>
-              <button onClick={handleSave} disabled={saving} className="bg-blue-600 px-6 py-3 rounded-lg text-white font-medium hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+              <button onClick={handleSave} disabled={saving} className="bg-blue-600 px-6 py-3 rounded-lg text-white font-medium hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed text-center">
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
-              <button onClick={() => { setEditing(false); setName(user.name || ''); setLinkedin(user.linkedin || ''); setLeetcode(user.leetcode || ''); setGithub(user.github || ''); setInterests(user.interests || []); setSkills(user.skills || []); setInterestInput(''); setSkillInput(''); }} className="px-6 py-3 rounded-lg border border-gray-300 text-slate-900 font-medium hover:bg-gray-50 transition-colors">Cancel</button>
+              <button onClick={() => { setEditing(false); setName(user.name || ''); setLinkedin(user.linkedin || ''); setLeetcode(user.leetcode || ''); setGithub(user.github || ''); setInterests(user.interests || []); setSkills(user.skills || []); setInterestInput(''); setSkillInput(''); }} className="px-6 py-3 rounded-lg border border-gray-300 text-slate-900 font-medium hover:bg-gray-50 transition-colors text-center">Cancel</button>
             </>
           ) : (
-            <button onClick={() => setEditing(true)} className="bg-blue-600 px-6 py-3 rounded-lg text-white font-medium hover:bg-blue-700 transition-colors shadow-sm">Edit Profile</button>
+            <button onClick={() => setEditing(true)} className="bg-blue-600 px-6 py-3 rounded-lg text-white font-medium hover:bg-blue-700 transition-colors shadow-sm text-center">Edit Profile</button>
           )}
         </div>
       </div>

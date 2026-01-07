@@ -78,58 +78,60 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               Learning Activity
             </h2>
           </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" vertical={false} />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#6b7280'}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#6b7280'}} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #d1d5db', borderRadius: '12px' }}
-                  itemStyle={{ color: '#2563eb' }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="hours" 
-                  stroke="#2563eb" 
-                  strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorHours)" 
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div className="h-[300px] w-full min-w-0 relative">
+            <div className="absolute inset-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <defs>
+                    <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" vertical={false} />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#6b7280' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280' }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #d1d5db', borderRadius: '12px' }}
+                    itemStyle={{ color: '#2563eb' }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="hours"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill="url(#colorHours)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
         <div className="bg-white border border-gray-300 p-8 rounded-3xl shadow-sm flex flex-col justify-center">
-           <h2 className="text-xl font-bold text-slate-900 mb-4 text-center">AI Readiness Score</h2>
-           <div className="relative flex items-center justify-center">
-              <div className="w-48 h-48 rounded-full border-[12px] border-gray-300 flex items-center justify-center">
-                <div className="text-center">
-                  <span className="text-5xl font-black text-blue-600">{stats.avgScore}</span>
-                  <p className="text-slate-600 text-sm mt-1">Average</p>
-                </div>
+          <h2 className="text-xl font-bold text-slate-900 mb-4 text-center">AI Readiness Score</h2>
+          <div className="relative flex items-center justify-center">
+            <div className="w-48 h-48 rounded-full border-[12px] border-gray-300 flex items-center justify-center">
+              <div className="text-center">
+                <span className="text-5xl font-black text-blue-600">{stats.avgScore}</span>
+                <p className="text-slate-600 text-sm mt-1">Average</p>
               </div>
-              <svg className="absolute w-48 h-48 transform -rotate-90">
-                <circle 
-                  cx="96" cy="96" r="84" 
-                  fill="transparent" 
-                  stroke="#2563eb" 
-                  strokeWidth="12" 
-                  strokeDasharray={`${(stats.avgScore / 100) * 527} 527`}
-                  strokeLinecap="round"
-                />
-              </svg>
-           </div>
-           <p className="text-slate-600 text-sm mt-8 text-center italic">
-             "Consistent practice is the key to mastering your technical skills."
-           </p>
+            </div>
+            <svg className="absolute w-48 h-48 transform -rotate-90">
+              <circle
+                cx="96" cy="96" r="84"
+                fill="transparent"
+                stroke="#2563eb"
+                strokeWidth="12"
+                strokeDasharray={`${(stats.avgScore / 100) * 527} 527`}
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+          <p className="text-slate-600 text-sm mt-8 text-center italic">
+            "Consistent practice is the key to mastering your technical skills."
+          </p>
         </div>
       </div>
     </div>

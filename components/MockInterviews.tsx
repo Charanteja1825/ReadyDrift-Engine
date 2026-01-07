@@ -50,7 +50,7 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
   const startInterview = async () => {
     try {
       const s = await navigator.mediaDevices.getUserMedia({
-        video: { width: 1280, height: 720 },
+        video: { facingMode: 'user' },
         audio: true
       });
       setStream(s);

@@ -232,7 +232,7 @@ const App: React.FC = () => {
 
       <main className="min-h-screen md:pl-64">
         {/* Mobile header with hamburger */}
-        <div className="md:hidden p-3 border-b border-gray-300 flex items-center gap-3">
+        <div className="md:hidden sticky top-0 z-30 bg-white/80 backdrop-blur-md p-3 border-b border-gray-300 flex items-center gap-3">
           <button onClick={() => setSidebarOpen(true)} aria-label="Open sidebar" className="p-2">
             <Menu className="w-6 h-6 text-slate-900" />
           </button>

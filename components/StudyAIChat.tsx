@@ -118,7 +118,7 @@ const StudyAIChat: React.FC<StudyAIChatProps> = ({ user }) => {
                 </div>
 
                 {/* Messages */}
-                <div className="h-[500px] overflow-y-auto p-6 space-y-4 bg-white">
+                <div className="h-[60vh] min-h-[350px] md:h-[500px] overflow-y-auto p-6 space-y-4 bg-white">
                     {messages.map((msg, idx) => (
                         <div
                             key={idx}

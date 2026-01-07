@@ -21,7 +21,7 @@ const INTEREST_TO_EXAM: Record<string, string> = {
   'Angular': 'Frontend Development',
   'HTML': 'Frontend Development',
   'CSS': 'Frontend Development',
-  
+
   // Backend variants
   'Backend': 'Backend Development',
   'Back-end': 'Backend Development',
@@ -29,17 +29,17 @@ const INTEREST_TO_EXAM: Record<string, string> = {
   'NodeJS': 'Node.js Backend',
   'Java': 'Backend Development',
   'Spring': 'Backend Development',
-  
+
   // Fullstack
   'Fullstack': 'Full Stack Development',
   'Full-stack': 'Full Stack Development',
-  
+
   // Data & ML
   'Data Science': 'Data Science & ML',
   'Machine Learning': 'Data Science & ML',
   'ML': 'Data Science & ML',
   'AI': 'Data Science & ML',
-  
+
   // DevOps & Cloud
   'DevOps': 'DevOps & Cloud',
   'SRE': 'System Reliability Engineering',
@@ -48,11 +48,11 @@ const INTEREST_TO_EXAM: Record<string, string> = {
   'GCP': 'Cloud Computing (AWS)',
   'Docker': 'Containerization & Docker',
   'Kubernetes': 'Kubernetes & Orchestration',
-  
+
   // Testing
   'QA': 'Quality Assurance Testing',
   'Testing': 'Quality Assurance Testing',
-  
+
   // Languages
   'JavaScript': 'JavaScript Fundamentals',
   'TypeScript': 'TypeScript Advanced',
@@ -60,7 +60,7 @@ const INTEREST_TO_EXAM: Record<string, string> = {
   'C++': 'System Design',
   'Go': 'Backend Development',
   'Rust': 'System Design',
-  
+
   // System Design
   'System Design': 'System Design',
   'Design Patterns': 'System Design',
@@ -68,7 +68,7 @@ const INTEREST_TO_EXAM: Record<string, string> = {
   'API Design': 'API Design & REST',
   'REST': 'API Design & REST',
   'GraphQL': 'API Design & REST',
-  
+
   // Database
   'Database Design': 'Advanced Database Design',
   'Database': 'Advanced Database Design',
@@ -76,7 +76,7 @@ const INTEREST_TO_EXAM: Record<string, string> = {
   'NoSQL': 'Advanced Database Design',
   'MongoDB': 'Advanced Database Design',
   'PostgreSQL': 'Advanced Database Design',
-  
+
   // Aptitude
   'Aptitude': 'Aptitude & Reasoning',
   'Reasoning': 'Aptitude & Reasoning',
@@ -100,13 +100,13 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
   // Compute available exam types from core + interests/skills (case-insensitive)
   const availableExamTypes = useMemo(() => {
     const set = new Set(CORE_EXAM_TYPES);
-    
+
     // Create case-insensitive lookup map
     const caseInsensitiveMap: Record<string, string> = {};
     Object.entries(INTEREST_TO_EXAM).forEach(([key, value]) => {
       caseInsensitiveMap[key.toLowerCase()] = value;
     });
-    
+
     // Add exams from interests (case-insensitive)
     if (user.interests && Array.isArray(user.interests)) {
       user.interests.forEach(interest => {
@@ -114,7 +114,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
         if (examType) set.add(examType);
       });
     }
-    
+
     // Add exams from skills (case-insensitive)
     if (user.skills && Array.isArray(user.skills)) {
       user.skills.forEach(skill => {
@@ -122,7 +122,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
         if (examType) set.add(examType);
       });
     }
-    
+
     return Array.from(set).sort();
   }, [user.interests, user.skills]);
 
@@ -226,7 +226,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
 
     // cleanup previous iframe if present
     if (iframeRefs.current[id]) {
-      try { iframeRefs.current[id]!.remove(); } catch (e) {}
+      try { iframeRefs.current[id]!.remove(); } catch (e) { }
       delete iframeRefs.current[id];
     }
 
@@ -265,7 +265,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
   const stopUserCode = (id: string) => {
     const f = iframeRefs.current[id];
     if (f) {
-      try { f.remove(); } catch (e) {}
+      try { f.remove(); } catch (e) { }
       delete iframeRefs.current[id];
     }
     setConsoleOutputs(prev => ({ ...prev, [id]: [...(prev[id] || []), '--- Run stopped ---'] }));
@@ -350,17 +350,17 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
     setHistory(history);
   };
 
-    if (stage === 'selection') {
+  if (stage === 'selection') {
     return (
       <div className="max-w-4xl mx-auto relative">
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Technical Mock Exams</h1>
-            <p className="text-slate-600">Select a subject to test your core engineering knowledge.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Technical Mock Exams</h1>
+            <p className="text-sm text-slate-600">Select a subject to test your core engineering knowledge.</p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">{user.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>
+          <div className="flex items-center gap-4 self-end sm:self-auto">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">{user.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>
           </div>
         </div>
 
@@ -368,7 +368,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
           {availableExamTypes.map((type) => {
             const isCore = CORE_EXAM_TYPES.includes(type);
             return (
-              <div key={type} className={`border p-8 rounded-3xl hover:border-blue-500 transition-all group relative overflow-hidden bg-white shadow-sm ${isCore ? '' : ''}`}>
+              <div key={type} className={`border p-5 sm:p-8 rounded-3xl hover:border-blue-500 transition-all group relative overflow-hidden bg-white shadow-sm ${isCore ? '' : ''}`}>
                 <div className="p-4 rounded-2xl w-fit mb-6 bg-blue-50">
                   <Play className="w-8 h-8 text-blue-600" />
                 </div>
@@ -379,7 +379,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
                   onClick={() => startExam(type)}
                   disabled={loading}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
-                  >
+                >
                   {loading && examType === type ? <Loader2 className="w-5 h-5" /> : 'Start Mock'}
                 </button>
               </div>
@@ -419,18 +419,18 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
     const q = questions[currentIndex];
     return (
       <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm">
-        <div className="bg-white p-6 flex items-center justify-between border-b border-gray-200">
-          <div className="flex items-center gap-4">
-            <span className="text-slate-700 font-semibold">Question {currentIndex + 1} of {questions.length}</span>
+        <div className="bg-white p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200">
+          <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
+            <span className="text-slate-700 font-semibold text-sm sm:text-base">Question {currentIndex + 1} of {questions.length}</span>
             <div className="flex items-center gap-2 text-slate-600 text-sm">
               <Clock className="w-4 h-4" />
               {Math.floor((Date.now() - startTime) / 60000)}m
             </div>
           </div>
-          <div className="flex items-center gap-3">
-             <div className="flex items-center gap-1 text-xs text-slate-500">
-               <Keyboard className="w-3 h-3" /> {typingActivity}
-             </div>
+          <div className="flex items-center gap-3 self-end sm:self-auto">
+            <div className="flex items-center gap-1 text-xs text-slate-500">
+              <Keyboard className="w-3 h-3" /> {typingActivity}
+            </div>
           </div>
         </div>
 
@@ -453,11 +453,10 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
                 <button
                   key={i}
                   onClick={() => setAnswers({ ...answers, [q.id]: opt })}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${
-                    answers[q.id] === opt 
-                      ? 'border-blue-600 bg-blue-50 text-blue-700' 
+                  className={`w-full text-left p-4 rounded-xl border transition-all ${answers[q.id] === opt
+                      ? 'border-blue-600 bg-blue-50 text-blue-700'
                       : 'border-gray-200 bg-white text-slate-700 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   <span className="mr-3 text-slate-500 font-bold">{String.fromCharCode(65 + i)}.</span>
                   {opt}
@@ -480,25 +479,25 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
           </div>
         </div>
 
-        <div className="p-6 bg-white border-t border-gray-200 flex justify-between">
+        <div className="p-4 sm:p-6 bg-white border-t border-gray-200 flex justify-between gap-2">
           <button
             disabled={currentIndex === 0}
             onClick={() => setCurrentIndex(prev => prev - 1)}
-            className="px-6 py-2 rounded-xl text-slate-600 disabled:opacity-50"
+            className="px-4 sm:px-6 py-2 rounded-xl text-slate-600 disabled:opacity-50 text-sm sm:text-base border border-transparent hover:bg-gray-50"
           >
             Previous
           </button>
           {currentIndex === questions.length - 1 ? (
             <button
               onClick={submitExam}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-10 py-3 rounded-xl shadow transition-all"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 sm:px-10 py-2 sm:py-3 text-sm sm:text-base rounded-xl shadow transition-all"
             >
               Finish Exam
             </button>
           ) : (
             <button
               onClick={() => setCurrentIndex(prev => prev + 1)}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-10 py-3 rounded-xl shadow transition-all"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 sm:px-10 py-2 sm:py-3 text-sm sm:text-base rounded-xl shadow transition-all"
             >
               Next Question
             </button>
@@ -512,26 +511,26 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
     return (
       <div className="max-w-4xl mx-auto space-y-8 animate-in zoom-in-95 duration-500 pb-12">
         <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center relative overflow-hidden">
-           {/* Celebratory confetti for good scores (pure CSS + small elements) */}
-           {finalResult.score >= 70 && (
-             <div aria-hidden className="absolute inset-0 pointer-events-none">
-               <div className="absolute inset-0">
-                 <span className="confetti-piece" style={{left:'8%', background:'#f97316', transform:'translateY(-20vh)', animation:'confettiFall 2500ms linear 0ms forwards'}} />
-                 <span className="confetti-piece" style={{left:'22%', background:'#60a5fa', width:10, height:12, transform:'translateY(-20vh)', animation:'confettiFall 2600ms linear 120ms forwards'}} />
-                 <span className="confetti-piece" style={{left:'36%', background:'#34d399', transform:'translateY(-20vh)', animation:'confettiFall 2400ms linear 70ms forwards'}} />
-                 <span className="confetti-piece" style={{left:'55%', background:'#f472b6', transform:'translateY(-20vh)', animation:'confettiFall 2800ms linear 220ms forwards'}} />
-                 <span className="confetti-piece" style={{left:'72%', background:'#fde68a', transform:'translateY(-20vh)', animation:'confettiFall 3000ms linear 180ms forwards'}} />
-               </div>
-             </div>
-           )}
+          {/* Celebratory confetti for good scores (pure CSS + small elements) */}
+          {finalResult.score >= 70 && (
+            <div aria-hidden className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-0">
+                <span className="confetti-piece" style={{ left: '8%', background: '#f97316', transform: 'translateY(-20vh)', animation: 'confettiFall 2500ms linear 0ms forwards' }} />
+                <span className="confetti-piece" style={{ left: '22%', background: '#60a5fa', width: 10, height: 12, transform: 'translateY(-20vh)', animation: 'confettiFall 2600ms linear 120ms forwards' }} />
+                <span className="confetti-piece" style={{ left: '36%', background: '#34d399', transform: 'translateY(-20vh)', animation: 'confettiFall 2400ms linear 70ms forwards' }} />
+                <span className="confetti-piece" style={{ left: '55%', background: '#f472b6', transform: 'translateY(-20vh)', animation: 'confettiFall 2800ms linear 220ms forwards' }} />
+                <span className="confetti-piece" style={{ left: '72%', background: '#fde68a', transform: 'translateY(-20vh)', animation: 'confettiFall 3000ms linear 180ms forwards' }} />
+              </div>
+            </div>
+          )}
 
-           <div className="relative z-10">
+          <div className="relative z-10">
             <div className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-6 ${finalResult.score >= 70 ? 'bg-emerald-600/20 text-emerald-500' : 'bg-red-600/20 text-red-500'}`}>
               <CheckCircle className="w-12 h-12" />
             </div>
             <h1 className="text-4xl font-black text-slate-100 mb-2">Exam Result: {finalResult.score}%</h1>
             <p className="text-slate-400 mb-8">Subject: {finalResult.examType}</p>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
               <div className="bg-slate-800/50 p-4 rounded-2xl">
                 <p className="text-xs text-slate-500 uppercase font-bold mb-1">Time Spent</p>
@@ -550,7 +549,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
                 <p className="text-xl font-bold text-slate-100">{finalResult.totalQuestions}</p>
               </div>
             </div>
-           </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -568,7 +567,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
               const qType = res.questionType || q?.type || (res.userAnswer ? 'coding' : 'mcq');
               const buildSearch = (platform: 'leetcode' | 'hackerrank' | 'gfg' | 'tutorialspoint') => {
                 const query = encodeURIComponent(questionText);
-                switch(platform) {
+                switch (platform) {
                   case 'leetcode': return { label: 'LeetCode', url: `https://leetcode.com/problemset/all/?search=${query}` };
                   case 'hackerrank': return { label: 'HackerRank', url: `https://www.hackerrank.com/search?query=${query}` };
                   case 'gfg': return { label: 'GeeksforGeeks', url: `https://www.geeksforgeeks.org/?s=${query}` };
@@ -611,28 +610,28 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
           </div>
 
           <div className="space-y-6">
-             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 sticky top-8">
-               <h3 className="text-xl font-bold text-slate-100 mb-4">Improvement Tips</h3>
-               {finalResult.weakTopics.length > 0 ? (
-                 <div className="space-y-4">
-                   <p className="text-slate-400 text-sm">Focus more on these areas identified in your performance:</p>
-                   {finalResult.weakTopics.map((topic, i) => (
-                     <div key={i} className="flex items-center gap-3 bg-red-500/10 p-3 rounded-xl text-red-400 border border-red-500/20">
-                       <Target className="w-5 h-5" />
-                       <span className="font-medium uppercase text-xs">{topic}</span>
-                     </div>
-                   ))}
-                 </div>
-               ) : (
-                 <p className="text-emerald-400 text-sm">Great job! You've mastered these concepts.</p>
-               )}
-               <button 
-                 onClick={() => setStage('selection')}
-                 className="w-full mt-8 bg-indigo-600 py-3 rounded-xl font-bold text-white shadow-lg shadow-indigo-600/20"
-               >
-                 Back to Selection
-               </button>
-             </div>
+            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 sticky top-8">
+              <h3 className="text-xl font-bold text-slate-100 mb-4">Improvement Tips</h3>
+              {finalResult.weakTopics.length > 0 ? (
+                <div className="space-y-4">
+                  <p className="text-slate-400 text-sm">Focus more on these areas identified in your performance:</p>
+                  {finalResult.weakTopics.map((topic, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-red-500/10 p-3 rounded-xl text-red-400 border border-red-500/20">
+                      <Target className="w-5 h-5" />
+                      <span className="font-medium uppercase text-xs">{topic}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-emerald-400 text-sm">Great job! You've mastered these concepts.</p>
+              )}
+              <button
+                onClick={() => setStage('selection')}
+                className="w-full mt-8 bg-indigo-600 py-3 rounded-xl font-bold text-white shadow-lg shadow-indigo-600/20"
+              >
+                Back to Selection
+              </button>
+            </div>
           </div>
         </div>
       </div>

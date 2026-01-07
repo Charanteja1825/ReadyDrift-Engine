@@ -102,7 +102,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
                         <button onClick={onLogin} className="hidden md:block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
                             Log in
                         </button>
-                        <button onClick={onSignup} className="px-5 py-2.5 rounded-full text-sm font-semibold text-white btn-primary hover:scale-105 transition-transform">
+                        <button onClick={onSignup} className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white btn-primary hover:scale-105 transition-transform">
                             Get Started
                         </button>
                     </div>
@@ -123,7 +123,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
                                 <Sparkles className="w-3 h-3" />
                                 <span>AI-Powered Career Success</span>
                             </div>
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1] mb-6">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1] mb-6">
                                 Master Your <br />
                                 <span className="text-gradient">Career Journey.</span>
                             </h1>
@@ -155,7 +155,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
                                     </div>
 
                                     {/* Stats Grid */}
-                                    <div className="grid grid-cols-4 gap-3">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                         {/* Total Exams */}
                                         <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm hover:border-blue-100 transition-colors">
                                             <div className="flex items-center gap-2 mb-3">
@@ -194,7 +194,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
                                     </div>
 
                                     {/* Bottom Section */}
-                                    <div className="flex gap-4 flex-1 min-h-0">
+                                    <div className="flex flex-col sm:flex-row gap-4 flex-1 min-h-0">
                                         {/* Chart Section */}
                                         <div className="flex-[2] bg-white rounded-2xl border border-slate-100 shadow-sm p-4 relative overflow-hidden flex flex-col">
                                             <div className="flex items-center gap-2 mb-4">
@@ -273,7 +273,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {features.map((feature, idx) => (
-                            <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-blue-200 transition-all duration-300 group">
+                            <div key={idx} className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg hover:border-blue-200 transition-all duration-300 group">
                                 <div className={`${feature.color} w-12 h-12 rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                                     {feature.icon}
                                 </div>
@@ -320,7 +320,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full md:w-1/2 relative pl-8">
+                        <div className="w-full md:w-1/2 relative mt-12 md:mt-0 md:pl-8">
                             <div className="relative z-10 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 shadow-2xl text-white">
                                 <div className="flex items-center gap-4 mb-6 border-b border-slate-700 pb-6">
                                     <div className="w-3 h-3 rounded-full bg-red-500"></div>
