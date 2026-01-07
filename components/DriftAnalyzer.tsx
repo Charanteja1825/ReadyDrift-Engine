@@ -84,36 +84,36 @@ const DriftAnalyzer: React.FC<DriftAnalyzerProps> = ({ user }) => {
   const drift = lastExam && prevExam ? lastExam.score - prevExam.score : 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-slate-100 mb-2 text-center">Drift Analyzer</h1>
-        <p className="text-slate-400 mb-10 text-center">Track how your preparation evolves and detect performance drift.</p>
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-500 px-4 sm:px-6 md:px-8">
+      <div className="w-full max-w-4xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-2 text-center">Drift Analyzer</h1>
+        <p className="text-xs sm:text-sm text-slate-400 mb-8 sm:mb-10 text-center">Track how your preparation evolves and detect performance drift.</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12">
           {/* Study Tracker */}
-          <div className="md:col-span-1 bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
-             <div className="flex items-center gap-3 mb-6 text-indigo-400">
-               <Calendar className="w-6 h-6" />
-               <h2 className="text-xl font-bold">Log Study Hours</h2>
+          <div className="md:col-span-1 bg-slate-900 border border-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl">
+             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 text-indigo-400">
+               <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
+               <h2 className="text-lg sm:text-xl font-bold">Log Study Hours</h2>
              </div>
-             <form onSubmit={handleLogStudy} className="space-y-4">
+             <form onSubmit={handleLogStudy} className="space-y-3 sm:space-y-4">
                <div>
                  <label className="text-xs text-slate-500 font-bold uppercase block mb-2">Hours Today</label>
                  <input
                    type="number"
                    step="0.5"
-                   className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                   className="w-full bg-slate-800 border border-slate-700 rounded-lg sm:rounded-xl py-2 sm:py-3 px-3 sm:px-4 text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
                    placeholder="e.g. 4.5"
                    value={studyHours}
                    onChange={(e) => { setStudyHours(e.target.value); setInputError(null); }}
                    required
                  />
-+                {inputError && <p className="text-red-400 text-sm mt-2">{inputError}</p>}
-+                {warning && <p className="text-amber-400 text-sm mt-2" role="alert" aria-live="polite">{warning}</p>}
+                {inputError && <p className="text-red-400 text-xs sm:text-sm mt-2">{inputError}</p>}
+                {warning && <p className="text-amber-400 text-xs sm:text-sm mt-2" role="alert" aria-live="polite">{warning}</p>}
                </div>
                <button
                  disabled={loading}
-                 className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20"
+                 className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl transition-all shadow-lg shadow-indigo-600/20"
                >
                  Update Progress
                </button>
@@ -121,32 +121,32 @@ const DriftAnalyzer: React.FC<DriftAnalyzerProps> = ({ user }) => {
           </div>
 
           {/* Aggregation Insights */}
-          <div className="md:col-span-2 bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl flex flex-col justify-center">
-            <h3 className="text-slate-400 font-bold uppercase text-xs mb-6 tracking-widest">Performance Signal</h3>
-            <div className="grid grid-cols-2 gap-8">
+          <div className="md:col-span-2 bg-slate-900 border border-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl flex flex-col justify-center">
+            <h3 className="text-slate-400 font-bold uppercase text-xs mb-4 sm:mb-6 tracking-widest">Performance Signal</h3>
+            <div className="grid grid-cols-2 gap-4 sm:gap-8">
               <div>
-                 <p className="text-slate-500 text-sm mb-1">Drift Ratio</p>
+                 <p className="text-slate-500 text-xs sm:text-sm mb-1">Drift Ratio</p>
                  <div className="flex items-baseline gap-2">
-                   <span className={`text-4xl font-black ${drift >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                   <span className={`text-2xl sm:text-4xl font-black ${drift >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
                      {drift >= 0 ? `+${drift}` : drift}%
                    </span>
-                   {drift >= 0 ? <TrendingUp className="w-5 h-5 text-emerald-500" /> : <TrendingDown className="w-5 h-5 text-red-500" />}
+                   {drift >= 0 ? <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" /> : <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />}
                  </div>
-                 <p className="text-xs text-slate-500 mt-2">Comparison vs last attempt</p>
+                 <p className="text-xs text-slate-500 mt-1 sm:mt-2">Comparison vs last attempt</p>
               </div>
               <div>
-                 <p className="text-slate-500 text-sm mb-1">AI Dependence</p>
+                 <p className="text-slate-500 text-xs sm:text-sm mb-1">AI Dependence</p>
                  <div className="flex items-baseline gap-2">
-                   <span className="text-4xl font-black text-amber-500">
+                   <span className="text-2xl sm:text-4xl font-black text-amber-500">
                      {lastExam ? lastExam.aiUsagePercent : 0}%
                    </span>
                  </div>
-                 <p className="text-xs text-slate-500 mt-2">Self-sufficiency indicator</p>
+                 <p className="text-xs text-slate-500 mt-1 sm:mt-2">Self-sufficiency indicator</p>
               </div>
             </div>
             {drift < 0 && (
-              <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3">
-                 <AlertCircle className="w-5 h-5 text-red-500" />
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-red-500/10 border border-red-500/20 rounded-lg sm:rounded-xl flex items-start sm:items-center gap-2 sm:gap-3">
+                 <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0 mt-0.5 sm:mt-0" />
                  <p className="text-xs text-red-400">Drift alert: Your score has decreased. Review your weak topics.</p>
               </div>
             )}
@@ -154,44 +154,44 @@ const DriftAnalyzer: React.FC<DriftAnalyzerProps> = ({ user }) => {
         </div>
 
         {/* Visualizations */}
-        <div className="space-y-8">
-          <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
-            <h3 className="text-xl font-bold text-slate-100 mb-8 flex items-center gap-2">
-               <BarChart2 className="w-6 h-6 text-indigo-500" />
+        <div className="space-y-6 sm:space-y-8">
+          <div className="bg-slate-900 border border-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-100 mb-4 sm:mb-8 flex items-center gap-2">
+               <BarChart2 className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500" />
                Preparation Velocity
             </h3>
-            <div className="h-[350px]">
+            <div className="h-[250px] sm:h-[300px] md:h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trendData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8'}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8'}} />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} domain={[0, 30]} />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px' }}
                   />
                   <Legend verticalAlign="top" height={36}/>
-                  <Line type="monotone" dataKey="hours" stroke="#6366f1" strokeWidth={3} dot={{r: 4, fill: '#6366f1'}} name="Study Hours" />
-                  <Line type="monotone" dataKey="score" stroke="#10b981" strokeWidth={3} dot={{r: 4, fill: '#10b981'}} name="Exam Score %" connectNulls />
+                  <Line type="monotone" dataKey="hours" stroke="#6366f1" strokeWidth={2} dot={{r: 3}} name="Study Hours" />
+                  <Line type="monotone" dataKey="score" stroke="#10b981" strokeWidth={2} dot={{r: 3}} name="Exam Score %" connectNulls />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-xl">
-            <h3 className="text-xl font-bold text-slate-100 mb-8 flex items-center gap-2">
-               <Target className="w-6 h-6 text-amber-500" />
+          <div className="bg-slate-900 border border-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-100 mb-4 sm:mb-8 flex items-center gap-2">
+               <Target className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
                AI Usage Correlation
             </h3>
-            <div className="h-[300px]">
+            <div className="h-[200px] sm:h-[250px] md:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trendData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8'}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8'}} />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px' }}
                   />
-                  <Bar dataKey="aiUsage" fill="#f59e0b" radius={[4, 4, 0, 0]} name="AI Dependency %" barSize={30} />
+                  <Bar dataKey="aiUsage" fill="#f59e0b" radius={[4, 4, 0, 0]} name="AI Dependency %" barSize={20} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
