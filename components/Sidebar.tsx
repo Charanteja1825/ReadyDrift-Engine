@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Target, BookOpen, Mic2, BarChart2, LogOut, GraduationCap, User, X, Star, Bell } from 'lucide-react';
+import { LayoutDashboard, Target, BookOpen, Mic2, BarChart2, LogOut, GraduationCap, User, X, Star, Bell, MessageCircle } from 'lucide-react';
 
 interface SidebarProps {
   currentTab: string;
@@ -25,6 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentTab, setTab, onLogout, isOpen 
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'connections', label: 'Connections', icon: Star },
     { id: 'reminders', label: 'Study Reminders', icon: Bell },
+    { id: 'ai-chat', label: 'AI Study Assistant', icon: MessageCircle },
   ];
 
   return (

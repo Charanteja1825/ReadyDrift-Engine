@@ -49,9 +49,9 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
 
   const startInterview = async () => {
     try {
-      const s = await navigator.mediaDevices.getUserMedia({ 
-        video: { width: 1280, height: 720 }, 
-        audio: true 
+      const s = await navigator.mediaDevices.getUserMedia({
+        video: { width: 1280, height: 720 },
+        audio: true
       });
       setStream(s);
       setIsActive(true);
@@ -70,13 +70,13 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
   const endInterview = async () => {
     setLoading(true);
     stopTimer();
-    
+
     // Stop the camera/mic tracks
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
     }
-    
+
     try {
       const aiFeedback = await generateInterviewFeedbackAPI();
       const toSave = {
@@ -101,8 +101,8 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
     try {
       const all = await db.getInterviews(user.id);
       // sort by createdAt desc
-      const sorted = (all || []).sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      setRecentSessions(sorted.slice(0,5));
+      const sorted = (all || []).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setRecentSessions(sorted.slice(0, 5));
     } catch (err) {
       console.error('Failed to load interviews', err);
     }
@@ -228,39 +228,39 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
         <p className="text-slate-600 mb-8">Simulate real-world interview scenarios and get emotional intelligence analysis.</p>
 
         {!isActive && !session && (
-          <div className="bg-slate-900 border border-slate-800 p-12 rounded-3xl text-center space-y-6">
-            <div className="bg-blue-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto">
-              <Video className="w-12 h-12 text-blue-600" />
+          <div className="bg-gradient-to-br from-white to-blue-50 border border-gray-300 p-12 rounded-3xl text-center space-y-6 shadow-lg">
+            <div className="bg-blue-600 w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-lg">
+              <Video className="w-12 h-12 text-white" />
             </div>
             <div className="space-y-2">
               <h2 className="text-2xl font-bold text-slate-900">Prepare your workspace</h2>
               <p className="text-slate-600 max-w-md mx-auto">
-                Ensure you are in a well-lit room with a stable internet connection. 
+                Ensure you are in a well-lit room with a stable internet connection.
                 The AI will analyze your facial expressions, confidence markers, and clarity.
               </p>
 
               <div className="mt-6 flex items-center justify-center gap-4">
                 <div className="flex items-center gap-2">
                   {deviceStatus.cameraAvailable ? <Video className="w-4 h-4 text-emerald-600" /> : <VideoOff className="w-4 h-4 text-rose-600" />}
-                  <span className="text-sm text-slate-600">Camera {deviceStatus.cameraAvailable ? 'Ready' : 'Not found'}</span>
+                  <span className="text-sm text-slate-700 font-medium">Camera {deviceStatus.cameraAvailable ? 'Ready' : 'Not found'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {deviceStatus.micAvailable ? <Mic className="w-4 h-4 text-emerald-600" /> : <MicOff className="w-4 h-4 text-rose-600" />}
-                  <span className="text-sm text-slate-600">Microphone {deviceStatus.micAvailable ? 'Ready' : 'Not found'}</span>
+                  <span className="text-sm text-slate-700 font-medium">Microphone {deviceStatus.micAvailable ? 'Ready' : 'Not found'}</span>
                 </div>
               </div>
 
               <div className="mt-4 flex items-center justify-center gap-3">
-                <button onClick={checkDevices} className="px-3 py-2 rounded-xl bg-gray-100 text-slate-900 hover:bg-gray-200">Check Devices</button>
-                <button onClick={previewCamera} className="px-3 py-2 rounded-xl bg-gray-100 text-slate-900 hover:bg-gray-200">Preview Camera</button>
-                <button onClick={testMic} className="px-3 py-2 rounded-xl bg-gray-100 text-slate-900 hover:bg-gray-200">Test Microphone</button>
+                <button onClick={checkDevices} className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm">Check Devices</button>
+                <button onClick={previewCamera} className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm">Preview Camera</button>
+                <button onClick={testMic} className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm">Test Microphone</button>
               </div>
 
               {testingPreview && (
                 <div className="mt-4 flex flex-col items-center gap-3">
-                  <video ref={previewVideoRef} autoPlay playsInline muted className="w-64 h-40 object-cover rounded-lg border border-gray-300" />
+                  <video ref={previewVideoRef} autoPlay playsInline muted className="w-64 h-40 object-cover rounded-lg border-2 border-blue-300 shadow-lg" />
                   <div>
-                    <button onClick={stopPreview} className="px-3 py-2 rounded-xl bg-rose-600 text-white">Stop Preview</button>
+                    <button onClick={stopPreview} className="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 font-medium shadow-md">Stop Preview</button>
                   </div>
                 </div>
               )}
@@ -286,7 +286,7 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 playsInline
                 className="w-full h-full object-cover scale-x-[-1] bg-gray-100"
               />
-              
+
               <div className="absolute top-6 left-6 flex items-center gap-3">
                 <div className="bg-red-600 w-3 h-3 rounded-full animate-pulse" />
                 <span className="text-slate-900 text-sm font-bold bg-white/80 px-3 py-1 rounded-full backdrop-blur-md border border-gray-300">
@@ -307,12 +307,12 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 </div>
                 <div className="flex items-center gap-2 ml-2">
                   {/* Video toggle */}
-                  <button onClick={toggleVideo} className={`p-3 rounded-xl ${cameraOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600' } transition-colors`}>
+                  <button onClick={toggleVideo} className={`p-3 rounded-xl ${cameraOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600'} transition-colors`}>
                     {cameraOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
                   </button>
 
                   {/* Mic toggle */}
-                  <button onClick={toggleMic} className={`p-3 rounded-xl ${micOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600' } transition-colors`}>
+                  <button onClick={toggleMic} className={`p-3 rounded-xl ${micOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600'} transition-colors`}>
                     {micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
                   </button>
 
@@ -323,9 +323,9 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                     <button onClick={resumeInterview} className="px-3 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center gap-2"><Play className="w-4 h-4" /> Resume</button>
                   )}
 
-                  <div className="px-3 text-sm text-slate-600">Elapsed: {Math.floor(elapsed / 60)}:{`${(elapsed % 60).toString().padStart(2,'0')}`}</div>
+                  <div className="px-3 text-sm text-slate-600">Elapsed: {Math.floor(elapsed / 60)}:{`${(elapsed % 60).toString().padStart(2, '0')}`}</div>
 
-                  <button 
+                  <button
                     onClick={endInterview}
                     disabled={loading}
                     className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-red-600/20"
@@ -336,7 +336,7 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-blue-50 border border-blue-300 p-8 rounded-3xl text-center">
               <h3 className="text-blue-700 text-sm font-bold uppercase tracking-widest mb-4">Prompt #1</h3>
               <p className="text-xl text-slate-900 font-medium italic">
@@ -382,33 +382,33 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-               <div className="bg-white border border-gray-300 rounded-3xl p-8 shadow-xl">
-                 <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                   <Award className="w-5 h-5 text-emerald-600" /> Key Strengths
-                 </h2>
-                 <ul className="space-y-4">
-                   {session.feedback.strengths.map((s, i) => (
-                     <li key={i} className="flex gap-3 text-slate-600">
-                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-2 flex-shrink-0" />
-                       {s}
-                     </li>
-                   ))}
-                 </ul>
-               </div>
+              <div className="bg-white border border-gray-300 rounded-3xl p-8 shadow-xl">
+                <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-emerald-600" /> Key Strengths
+                </h2>
+                <ul className="space-y-4">
+                  {session.feedback.strengths.map((s, i) => (
+                    <li key={i} className="flex gap-3 text-slate-600">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-2 flex-shrink-0" />
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-               <div className="bg-white border border-gray-300 rounded-3xl p-8 shadow-xl">
-                 <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                   <Zap className="w-5 h-5 text-amber-600" /> Growth Areas
-                 </h2>
-                 <ul className="space-y-4">
-                   {session.feedback.weaknesses.map((w, i) => (
-                     <li key={i} className="flex gap-3 text-slate-600">
-                       <div className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-2 flex-shrink-0" />
-                       {w}
-                     </li>
-                   ))}
-                 </ul>
-               </div>
+              <div className="bg-white border border-gray-300 rounded-3xl p-8 shadow-xl">
+                <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-amber-600" /> Growth Areas
+                </h2>
+                <ul className="space-y-4">
+                  {session.feedback.weaknesses.map((w, i) => (
+                    <li key={i} className="flex gap-3 text-slate-600">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-2 flex-shrink-0" />
+                      {w}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <div className="bg-white border border-gray-300 p-1 rounded-3xl shadow-2xl">
@@ -421,7 +421,7 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                     </div>
                   ))}
                 </div>
-                <button 
+                <button
                   onClick={() => setSession(null)}
                   className="mt-8 text-blue-600 font-bold bg-white hover:bg-gray-100 px-8 py-3 rounded-xl transition-all shadow-xl"
                 >

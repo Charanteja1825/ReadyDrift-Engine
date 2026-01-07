@@ -43,13 +43,13 @@ app.get("/api/health", (req, res) => {
 app.post('/api/ai/skill-gap', async (req, res) => {
   try {
     const { role, skills, time } = req.body;
-    
+
     if (!role || !skills || !time) {
       return res.status(400).json({ error: 'Missing required fields: role, skills, time' });
     }
 
     console.log(`🎯 Analyzing skill gap for ${role}...`);
-    
+
     // Mock data - for testing while quota is exceeded
     const mockResult = {
       analysis: {
@@ -67,7 +67,7 @@ app.post('/api/ai/skill-gap', async (req, res) => {
         { phase: 'Phase 3', strategy: 'Understand design patterns and build full-stack project', timeAllocation: '30 hours' }
       ]
     };
-    
+
     console.log(`✅ Analysis complete for ${role}`);
     res.json(mockResult);
   } catch (error) {
@@ -80,13 +80,13 @@ app.post('/api/ai/skill-gap', async (req, res) => {
 app.post('/api/ai/generate-exam', async (req, res) => {
   try {
     const { type } = req.body;
-    
+
     if (!type) {
       return res.status(400).json({ error: 'Missing exam type' });
     }
 
     console.log(`📝 Generating ${type} exam...`);
-    
+
     // Mock data - for testing while quota is exceeded
     const mockQuestions = {
       DSA: [
@@ -330,7 +330,7 @@ app.post('/api/ai/generate-exam', async (req, res) => {
         }
       ]
     };
-    
+
     const questions = mockQuestions[type] || mockQuestions['DSA'];
     console.log(`✅ Generated ${questions.length} mock questions for ${type}`);
     res.json(questions);
@@ -344,7 +344,7 @@ app.post('/api/ai/generate-exam', async (req, res) => {
 app.post('/api/ai/interview-feedback', async (req, res) => {
   try {
     console.log('🎤 Generating interview feedback...');
-    
+
     const mockFeedback = {
       confidenceScore: Math.floor(Math.random() * 40 + 60), // 60-100
       stressLevel: Math.floor(Math.random() * 40 + 20), // 20-60
@@ -369,7 +369,7 @@ app.post('/api/ai/interview-feedback', async (req, res) => {
         ]
       }
     };
-    
+
     console.log('✅ Feedback generated');
     res.json(mockFeedback);
   } catch (error) {
@@ -409,7 +409,7 @@ app.post('/api/ai/explanation', async (req, res) => {
       const valid = matches >= threshold;
       const feedback = valid
         ? `The pseudo-code contains ${matches}/${tokens.length} key tokens and looks correct. Suggestions: add edge-case handling and comments.`
-        : `The pseudo-code is missing key concepts (${matches}/${tokens.length}). Look for: ${tokens.slice(0,3).join(', ')}.`;
+        : `The pseudo-code is missing key concepts (${matches}/${tokens.length}). Look for: ${tokens.slice(0, 3).join(', ')}.`;
 
       console.log(`✅ Validation result: ${valid ? 'valid' : 'invalid'} (${matches}/${tokens.length})`);
       return res.json({ valid, feedback, matches, tokens });
@@ -421,20 +421,81 @@ app.post('/api/ai/explanation', async (req, res) => {
     }
 
     console.log('💡 Generating explanation...');
-    
+
     const mockExplanations = {
       'What is the time complexity of binary search?': 'Binary search works by repeatedly dividing the search space in half. Each division reduces the problem size, leading to logarithmic complexity O(log n). This is much faster than linear search O(n) for large datasets.',
       'What does JOIN do in SQL?': 'SQL JOIN combines rows from two or more tables based on a related column. INNER JOIN returns only matching records, LEFT JOIN includes all records from left table, RIGHT JOIN from right table, and FULL JOIN returns all records from both tables.',
       'default': `The correct answer is: ${correctAnswer}. Your answer was: ${answer || 'not provided'}. The correct answer is more accurate/complete because it addresses the core concept more effectively.`
     };
-    
+
     const explanation = mockExplanations[question] || mockExplanations['default'];
-    
+
     console.log('✅ Explanation generated');
     res.json({ explanation });
   } catch (error) {
     console.error('❌ Explanation error:', error.message);
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Study AI Chat - Only answers study-related questions
+app.post('/api/study-chat', async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    console.log(`💬 Study chat query: "${message.substring(0, 50)}..."`);
+
+    try {
+      // System prompt to restrict to study-related topics only
+      const systemPrompt = `You are an AI Study Assistant. You ONLY answer questions related to:
+- Academic subjects (Math, Science, Programming, etc.)
+- Study techniques and learning strategies
+- Exam preparation and test-taking tips
+- Time management for students
+- Educational resources and recommendations
+- Career guidance for students
+- Homework help and concept explanations
+
+If the user asks about anything NOT related to studying, learning, or education, politely decline and redirect them to ask study-related questions.
+
+Keep responses concise, helpful, and encouraging. Use emojis occasionally to make it friendly.`;
+
+      const fullPrompt = `${systemPrompt}\n\nUser question: ${message}`;
+
+      const result = await model.generateContent(fullPrompt);
+      const response = result.response.text();
+
+      console.log(`✅ Study chat response generated`);
+      res.json({ response });
+    } catch (apiError) {
+      console.error('⚠️ Gemini API error, using fallback:', apiError.message);
+
+      // Fallback responses for common study questions
+      const lowerMessage = message.toLowerCase();
+      let response = '';
+
+      if (lowerMessage.includes('linked') && lowerMessage.includes('list')) {
+        response = "A **linked list** is a linear data structure where elements (nodes) are connected via pointers. Each node contains:\n• Data (the value)\n• Pointer to the next node\n\n**Advantages:**\n✅ Dynamic size\n✅ Easy insertion/deletion\n\n**Disadvantages:**\n❌ No random access\n❌ Extra memory for pointers\n\n**Types:** Singly, doubly, circular linked lists. 📚";
+      } else if (lowerMessage.includes('binary') && lowerMessage.includes('search')) {
+        response = "**Binary Search** finds an item in a sorted array efficiently.\n\n**Steps:**\n1. Compare target with middle\n2. If equal, found!\n3. If target < middle, search left\n4. If target > middle, search right\n\n**Time:** O(log n) ⚡\n**Requirement:** Array must be sorted! 🎯";
+      } else if (lowerMessage.includes('study') || lowerMessage.includes('tips')) {
+        response = "**Proven Study Techniques:**\n\n1. **Active Recall** 🧠 - Test yourself\n2. **Spaced Repetition** 📅 - Review at intervals\n3. **Pomodoro** ⏰ - 25min focus + 5min break\n4. **Teach Others** 👥 - Explain concepts\n5. **Practice** ✍️ - Apply knowledge\n\nConsistency beats cramming! 💪";
+      } else {
+        response = `Great question! 📚\n\nI'm currently experiencing API connectivity issues, but I can still help!\n\n**For ${message}:**\n• Break it into smaller concepts\n• Look for visual examples\n• Practice with exercises\n• Try explaining it simply\n\nPlease try again or ask about: linked lists, binary search, study tips, algorithms, or any CS topic! 😊`;
+      }
+
+      res.json({ response });
+    }
+  } catch (error) {
+    console.error('❌ Study chat error:', error.message);
+    res.status(500).json({
+      error: 'Failed to generate response',
+      response: "I'm having trouble connecting right now. Please try again in a moment! 🔄"
+    });
   }
 });
 

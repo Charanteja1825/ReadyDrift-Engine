@@ -12,6 +12,7 @@ import DriftAnalyzer from './components/DriftAnalyzer';
 import Connections from './components/Connections';
 import PublicProfile from './components/PublicProfile';
 import StudyReminders from './components/StudyReminders';
+import StudyAIChat from './components/StudyAIChat';
 import { Menu, Bell, X } from 'lucide-react';
 import { db } from './services/db';
 
@@ -158,6 +159,8 @@ const App: React.FC = () => {
         return <Profile user={user} onUpdate={handleUpdateUser} />;
       case 'reminders':
         return <StudyReminders userId={user.id} />;
+      case 'ai-chat':
+        return <StudyAIChat user={user} />;
       case 'public-profile':
         return selectedPublicUserId ? <PublicProfile userId={selectedPublicUserId} currentUserId={user.id} onBack={() => setCurrentTab('connections')} /> : <Dashboard user={user} />;
       default:

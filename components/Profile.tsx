@@ -200,7 +200,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
                         className="text-blue-600 hover:text-blue-700 font-medium truncate block"
                         href={user.linkedin}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                       >
                         {user.linkedin}
                       </a>
@@ -233,7 +233,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
                         className="text-orange-600 hover:text-orange-700 font-medium truncate block"
                         href={user.leetcode}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                       >
                         {user.leetcode}
                       </a>
@@ -266,7 +266,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
                         className="text-gray-700 hover:text-gray-900 font-medium truncate block"
                         href={user.github}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                       >
                         {user.github}
                       </a>

@@ -149,7 +149,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ userId, currentUserId, on
                   <a
                     href={user.linkedin}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-all group"
                   >
                     <Linkedin className="w-4 h-4 text-blue-600" />
@@ -160,7 +160,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ userId, currentUserId, on
                   <a
                     href={user.leetcode}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-all group"
                   >
                     <LeetCodeIcon className="w-4 h-4 text-orange-600" />
@@ -171,7 +171,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ userId, currentUserId, on
                   <a
                     href={user.github}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-300 transition-all group"
                   >
                     <Github className="w-4 h-4 text-gray-700" />
