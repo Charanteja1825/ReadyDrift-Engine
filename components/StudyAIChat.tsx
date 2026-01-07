@@ -16,7 +16,7 @@ const StudyAIChat: React.FC<StudyAIChatProps> = ({ user }) => {
     const [messages, setMessages] = useState<Message[]>([
         {
             role: 'assistant',
-            content: "Hi! I'm your AI Study Assistant powered by Gemini. Ask me anything about studying, learning strategies, exam preparation, or any academic topic. I'm here to help you succeed! 📚",
+            content: "Hi! I'm your AI Assistant. You can ask me about anything! (General knowledge, definitions, coding, study topics, etc.) 📚\n\nNote: I don't discuss movies/entertainment or harmful topics.",
             timestamp: new Date()
         }
     ]);
@@ -87,7 +87,7 @@ const StudyAIChat: React.FC<StudyAIChatProps> = ({ user }) => {
         setMessages([
             {
                 role: 'assistant',
-                content: "Chat cleared! How can I help you with your studies today?",
+                content: "Chat cleared! Ready to help with any topic! 🎓",
                 timestamp: new Date()
             }
         ]);
@@ -126,8 +126,8 @@ const StudyAIChat: React.FC<StudyAIChatProps> = ({ user }) => {
                         >
                             <div
                                 className={`max-w-[80%] rounded-2xl px-4 py-3 ${msg.role === 'user'
-                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                                        : 'bg-gradient-to-r from-purple-50 to-blue-50 text-slate-900 border border-purple-200'
+                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                                    : 'bg-gradient-to-r from-purple-50 to-blue-50 text-slate-900 border border-purple-200'
                                     }`}
                             >
                                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
@@ -158,7 +158,7 @@ const StudyAIChat: React.FC<StudyAIChatProps> = ({ user }) => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            placeholder="Ask me anything about studying, exams, or learning..."
+                            placeholder="Ask any question (except movies/entertainment)..."
                             className="flex-1 px-4 py-3 rounded-xl border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
                             disabled={loading}
                         />
@@ -176,7 +176,7 @@ const StudyAIChat: React.FC<StudyAIChatProps> = ({ user }) => {
                         </button>
                     </div>
                     <p className="text-xs text-slate-500 mt-2 text-center">
-                        💡 This AI assistant only answers study-related questions
+                        💡 AI answers general questions but strictly blocks movies & harmful content
                     </p>
                 </div>
             </div>

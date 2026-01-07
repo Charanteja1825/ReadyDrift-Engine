@@ -21,7 +21,8 @@ console.log('✅ API Key loaded successfully');
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+console.log("🤖 Initialized Gemini Model: gemini-1.5-flash");
 
 // Error handler middleware
 app.use((err, req, res, next) => {
@@ -451,18 +452,18 @@ app.post('/api/study-chat', async (req, res) => {
 
     try {
       // System prompt to restrict to study-related topics only
-      const systemPrompt = `You are an AI Study Assistant. You ONLY answer questions related to:
-- Academic subjects (Math, Science, Programming, etc.)
-- Study techniques and learning strategies
-- Exam preparation and test-taking tips
-- Time management for students
-- Educational resources and recommendations
-- Career guidance for students
-- Homework help and concept explanations
-
-If the user asks about anything NOT related to studying, learning, or education, politely decline and redirect them to ask study-related questions.
-
-Keep responses concise, helpful, and encouraging. Use emojis occasionally to make it friendly.`;
+      const systemPrompt = `You are a helpful AI Assistant.
+      
+      Your rules are:
+      1. You must answer questions about ANY topic (Education, General Knowledge, Science, coding, definitions like "who is a physiotherapist", etc.).
+      2. STRICTLY REFUSE to answer any questions related to:
+         - Abuse, violence, hate speech, or harmful content.
+         - Movies, TV shows, entertainment, or celebrity gossip.
+      
+      If the user asks about permitted topics, provide a clear, concise, and helpful answer.
+      If the user asks about blocked topics (abuse or movies), politely decline and explain that you cannot discuss those topics.
+      
+      Keep responses helpful and encouraging. Use emojis occasionally to make it friendly.`;
 
       const fullPrompt = `${systemPrompt}\n\nUser question: ${message}`;
 
@@ -480,12 +481,49 @@ Keep responses concise, helpful, and encouraging. Use emojis occasionally to mak
 
       if (lowerMessage.includes('linked') && lowerMessage.includes('list')) {
         response = "A **linked list** is a linear data structure where elements (nodes) are connected via pointers. Each node contains:\n• Data (the value)\n• Pointer to the next node\n\n**Advantages:**\n✅ Dynamic size\n✅ Easy insertion/deletion\n\n**Disadvantages:**\n❌ No random access\n❌ Extra memory for pointers\n\n**Types:** Singly, doubly, circular linked lists. 📚";
+      } else if (lowerMessage.includes('tree')) {
+        response = "**Trees** are hierarchical data structures consisting of nodes connected by edges.\n\n**Key Terms:**\n🌱 **Root:** Topmost node\n🌿 **Leaf:** Node with no children\n🌲 **Binary Tree:** Each node has at most 2 children\n\n**Used for:** File systems, HTML DOM, routing algorithms.";
+      } else if (lowerMessage.includes('stack')) {
+        response = "**Stack** is a linear data structure following **LIFO** (Last In, First Out).\n\n**Operations:**\n⬆️ **Push:** Add to top\n⬇️ **Pop:** Remove from top\n👀 **Peek:** View top element\n\n**Real-world ex:** Undo button, browser history, function calls.";
+      } else if (lowerMessage.includes('queue')) {
+        response = "**Queue** is a linear data structure following **FIFO** (First In, First Out).\n\n**Operations:**\n➡️ **Enqueue:** Add to rear\n⬅️ **Dequeue:** Remove from front\n\n**Real-world ex:** Printer jobs, customer service lines, CPU scheduling.";
+      } else if (lowerMessage.includes('graph')) {
+        response = "**Graphs** are non-linear structures made of Vertices (nodes) and Edges (connections).\n\n**Types:**\n• Directed vs Undirected\n• Weighted vs Unweighted\n\n**Algorithms:**\n🔍 **BFS:** Breadth-First Search (Layer by layer)\n🕵️ **DFS:** Depth-First Search (Deep dive)";
+      } else if (lowerMessage.includes('sort')) {
+        response = "**Sorting Algorithms** arrange data in order.\n\n**Common types:**\n🐢 **Bubble Sort:** Simple, slow O(n²)\n⚡ **Quick Sort:** Fast, divide & conquer O(n log n)\n🤝 **Merge Sort:** Stable, reliable O(n log n)\n\nSelection depends on data size and memory!";
       } else if (lowerMessage.includes('binary') && lowerMessage.includes('search')) {
         response = "**Binary Search** finds an item in a sorted array efficiently.\n\n**Steps:**\n1. Compare target with middle\n2. If equal, found!\n3. If target < middle, search left\n4. If target > middle, search right\n\n**Time:** O(log n) ⚡\n**Requirement:** Array must be sorted! 🎯";
+      } else if (lowerMessage.includes('sql') || lowerMessage.includes('database')) {
+        response = "**Databases** store organized data.\n\n**SQL (Relational):** Tables, rows, columns (e.g., PostgreSQL, MySQL). Good for structured data.\n**NoSQL (Non-relational):** Documents, key-pairs (e.g., MongoDB). Flexible and scalable.\n\n**Key Concept:** ACID properties ensure reliability.";
+      } else if (lowerMessage.includes('oop') || lowerMessage.includes('object')) {
+        response = "**Object-Oriented Programming (OOP)** is a paradigm based on 'objects'.\n\n**4 Pillars:**\n🔒 **Encapsulation:** Hiding data\n🧬 **Inheritance:** Parent/Child classes\n🎭 **Polymorphism:** Many forms\n🧩 **Abstraction:** Hiding complexity";
+      } else if (lowerMessage.includes('physiotherapist') || lowerMessage.includes('physical therapy')) {
+        response = "**A Physiotherapist** is a healthcare professional who helps people affected by injury, illness or disability through movement and exercise, manual therapy, education and advice. 🏥\n\nThey facilitate recovery and help people remain independent for as long as possible.";
+      } else if (lowerMessage.includes('anthropologist') || lowerMessage.includes('anthropology')) {
+        response = "**An Anthropologist** is a scientist who studies humans, human behavior, and societies in the past and present. 🌍\n\nThey explore what makes us human, from our biological evolution to our diverse cultures and social practices.";
+      } else if (lowerMessage.includes('stress') || lowerMessage.includes('anxiety') || lowerMessage.includes('mental') || lowerMessage.includes('burnout')) {
+        response = "**Managing Academic Stress:** 🧘\n\n1. **Take Breaks:** Rest is productive.\n2. **Sleep Well:** Your brain needs it to learn.\n3. **Talk to Someone:** Friends, family, or counselors.\n4. **Exercise:** Even a short walk helps.\n\nYou've got this! Take it one step at a time. 🌟";
       } else if (lowerMessage.includes('study') || lowerMessage.includes('tips')) {
         response = "**Proven Study Techniques:**\n\n1. **Active Recall** 🧠 - Test yourself\n2. **Spaced Repetition** 📅 - Review at intervals\n3. **Pomodoro** ⏰ - 25min focus + 5min break\n4. **Teach Others** 👥 - Explain concepts\n5. **Practice** ✍️ - Apply knowledge\n\nConsistency beats cramming! 💪";
+      } else if (lowerMessage.match(/^(hi|hello|hey|greetings)/)) {
+        response = "Hello there! 👋\n\nI'm ready to help you with any question you have, from academic topics to general knowledge! (Currently running in limited Offline Mode 📡)";
+      } else if (lowerMessage.includes('how are you')) {
+        response = "I'm doing great, thanks for asking! 🤖\n\nI'm operating in offline mode right now, but I'm still happy to chat about what I know!";
+      } else if (lowerMessage.includes('joke')) {
+        const jokes = [
+          "Why did the developer go broke? Because he used up all his cache! 💸",
+          "Why do programmers prefer dark mode? Because light attracts bugs! 🪲",
+          "What do you call a fake noodle? An Impasta! 🍝"
+        ];
+        response = jokes[Math.floor(Math.random() * jokes.length)];
+      } else if (lowerMessage.includes('time') || lowerMessage.includes('date')) {
+        response = `The current system time is: ${new Date().toLocaleString()} ⌚`;
+      } else if (lowerMessage.includes('weather')) {
+        response = "I can't check the live weather right now ☁️, but usually looking out the window is the most accurate forecast! 😉";
+      } else if (lowerMessage.includes('food') || lowerMessage.includes('eat') || lowerMessage.includes('dinner')) {
+        response = "I don't eat, but I hear pizza 🍕 is a popular choice for humans! What's your favorite food?";
       } else {
-        response = `Great question! 📚\n\nI'm currently experiencing API connectivity issues, but I can still help!\n\n**For ${message}:**\n• Break it into smaller concepts\n• Look for visual examples\n• Practice with exercises\n• Try explaining it simply\n\nPlease try again or ask about: linked lists, binary search, study tips, algorithms, or any CS topic! 😊`;
+        response = `I'm currently running in **Offline Mode** (API Quota reached). 📡\n\nI couldn't match your question to my offline database, but I can answer common questions about:\n\n• **General:** Hello, Jokes, Time, Weather\n• **Definitions:** Physiotherapist, Anthropologist\n• **CS Topics:** Stacks, Trees, Queues, Sorting, OOP, SQL\n\nPlease try one of these topics or wait for the connection to restore!`;
       }
 
       res.json({ response });

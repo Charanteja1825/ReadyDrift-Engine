@@ -27,24 +27,29 @@ const App: React.FC = () => {
   useEffect(() => {
     const savedUser = localStorage.getItem('cr_current_user');
     if (savedUser) {
-      const parsed = JSON.parse(savedUser);
-      // If saved user is missing email (older format), try fetching latest profile from Firestore
-      if (parsed && parsed.uid && !parsed.email) {
-        (async () => {
-          try {
-            const fresh = await db.signinByUID(parsed.uid);
-            if (fresh) {
-              setUser(fresh);
-              localStorage.setItem('cr_current_user', JSON.stringify(fresh));
-              return;
+      try {
+        const parsed = JSON.parse(savedUser);
+        // If saved user is missing email (older format), try fetching latest profile from Firestore
+        if (parsed && parsed.uid && !parsed.email) {
+          (async () => {
+            try {
+              const fresh = await db.signinByUID(parsed.uid);
+              if (fresh) {
+                setUser(fresh);
+                localStorage.setItem('cr_current_user', JSON.stringify(fresh));
+                return;
+              }
+            } catch (e) {
+              // ignore and fall back
             }
-          } catch (e) {
-            // ignore and fall back
-          }
+            setUser(parsed);
+          })();
+        } else {
           setUser(parsed);
-        })();
-      } else {
-        setUser(parsed);
+        }
+      } catch (e) {
+        console.error("Failed to parse user from local storage", e);
+        localStorage.removeItem('cr_current_user');
       }
     }
   }, []);
@@ -75,7 +80,13 @@ const App: React.FC = () => {
       const stored = localStorage.getItem(`reminders_${user.id}`);
       if (!stored) return;
 
-      const reminders: StudyReminder[] = JSON.parse(stored);
+      let reminders: StudyReminder[] = [];
+      try {
+        reminders = JSON.parse(stored);
+      } catch (e) {
+        console.error("Failed to parse reminders", e);
+        return;
+      }
       reminders.forEach(reminder => {
         if (reminder.enabled && reminder.days.includes(currentDay) && reminder.time === currentTime) {
           const lastShownKey = `last_shown_${reminder.id}`;
@@ -96,7 +107,7 @@ const App: React.FC = () => {
                 requireInteraction: true,
                 silent: false,
                 vibrate: [200, 100, 200]
-              });
+              } as any);
 
               notification.onclick = function () {
                 window.focus();
