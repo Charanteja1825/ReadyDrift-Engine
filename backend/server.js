@@ -11,18 +11,19 @@ app.use(cors());
 app.use(express.json());
 
 // Verify API key exists
+let genAI = null;
+let model = null;
+
 if (!process.env.GEMINI_API_KEY) {
-  console.error('❌ ERROR: GEMINI_API_KEY not found in .env file!');
-  console.error('Please create .env file with: GEMINI_API_KEY=your_key_here');
-  process.exit(1);
+  console.warn('⚠️ WARNING: GEMINI_API_KEY not found in .env file!');
+  console.warn('⚠️ Server running in OFFLINE MODE. AI features will respond with fallback content.');
+} else {
+  console.log('✅ API Key loaded successfully');
+  // Initialize Gemini AI
+  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  console.log("🤖 Initialized Gemini Model: gemini-1.5-flash");
 }
-
-console.log('✅ API Key loaded successfully');
-
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-console.log("🤖 Initialized Gemini Model: gemini-1.5-flash");
 
 // Error handler middleware
 app.use((err, req, res, next) => {
@@ -467,6 +468,9 @@ app.post('/api/study-chat', async (req, res) => {
 
       const fullPrompt = `${systemPrompt}\n\nUser question: ${message}`;
 
+      if (!model) {
+        throw new Error("Offline Mode: Model not initialized");
+      }
       const result = await model.generateContent(fullPrompt);
       const response = result.response.text();
 
