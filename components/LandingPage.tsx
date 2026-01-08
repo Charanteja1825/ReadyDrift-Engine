@@ -137,7 +137,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
                             </div>
 
                             <div className="mt-10 flex items-center justify-center md:justify-start gap-8 opacity-80 grayscale hover:grayscale-0 transition-all duration-500">
-                                <span className="text-slate-400 font-bold text-xl">GDG OC</span>
+                                <span className="text-slate-400 font-bold text-xl">GDGOC</span>
                             </div>
                         </div>
 
