@@ -88,9 +88,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
             <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-3' : 'bg-transparent py-5'}`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30">
-                            SF
-                        </div>
+                        <img src="/favicon.png" alt="SkillForge Logo" className="w-10 h-10" />
                         <span className="text-xl font-bold tracking-tight text-slate-900">SkillForge</span>
                     </div>
 

@@ -108,8 +108,8 @@ const Auth: React.FC<AuthProps> = ({ onLogin, notice }) => {
 
       <div className="w-full max-w-md glass-card rounded-3xl p-8 border border-white/50 shadow-xl relative z-10 animate-fade-in-up">
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-blue-600 p-4 rounded-2xl mb-4">
-            <GraduationCap className="w-10 h-10 text-white" />
+          <div className="mb-4">
+            <img src="/favicon.png" alt="SkillForge" className="w-16 h-16" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">SkillForge</h1>
           <p className="text-slate-600 text-center">Accelerate your career journey with AI insights</p>
