@@ -222,24 +222,24 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
   }, []);
 
   return (
-    <div className="space-y-8 animate-in slide-in-from-right duration-500">
+    <div className="space-y-8 animate-in slide-in-from-right duration-500 p-4 sm:p-0">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">AI Behavioral Interview</h1>
-        <p className="text-slate-600 mb-8">Simulate real-world interview scenarios and get emotional intelligence analysis.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">AI Behavioral Interview</h1>
+        <p className="text-sm sm:text-base text-slate-600 mb-6 sm:mb-8">Simulate real-world interview scenarios and get emotional intelligence analysis.</p>
 
         {!isActive && !session && (
-          <div className="bg-gradient-to-br from-white to-blue-50 border border-gray-300 p-12 rounded-3xl text-center space-y-6 shadow-lg">
-            <div className="bg-blue-600 w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-lg">
-              <Video className="w-12 h-12 text-white" />
+          <div className="bg-gradient-to-br from-white to-blue-50 border border-gray-300 p-6 sm:p-12 rounded-2xl sm:rounded-3xl text-center space-y-6 shadow-lg">
+            <div className="bg-blue-600 w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mx-auto shadow-lg">
+              <Video className="w-8 h-8 sm:w-12 sm:h-12 text-white" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-slate-900">Prepare your workspace</h2>
-              <p className="text-slate-600 max-w-md mx-auto">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Prepare your workspace</h2>
+              <p className="text-sm sm:text-base text-slate-600 max-w-md mx-auto">
                 Ensure you are in a well-lit room with a stable internet connection.
                 The AI will analyze your facial expressions, confidence markers, and clarity.
               </p>
 
-              <div className="mt-6 flex items-center justify-center gap-4">
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div className="flex items-center gap-2">
                   {deviceStatus.cameraAvailable ? <Video className="w-4 h-4 text-emerald-600" /> : <VideoOff className="w-4 h-4 text-rose-600" />}
                   <span className="text-sm text-slate-700 font-medium">Camera {deviceStatus.cameraAvailable ? 'Ready' : 'Not found'}</span>
@@ -250,17 +250,17 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-center gap-3">
-                <button onClick={checkDevices} className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm">Check Devices</button>
-                <button onClick={previewCamera} className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm">Preview Camera</button>
-                <button onClick={testMic} className="px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm">Test Microphone</button>
+              <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button onClick={checkDevices} className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm text-sm">Check Devices</button>
+                <button onClick={previewCamera} className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm text-sm">Preview Camera</button>
+                <button onClick={testMic} className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white border border-gray-300 text-slate-900 hover:bg-gray-50 font-medium shadow-sm text-sm">Test Microphone</button>
               </div>
 
               {testingPreview && (
                 <div className="mt-4 flex flex-col items-center gap-3">
-                  <video ref={previewVideoRef} autoPlay playsInline muted className="w-64 h-40 object-cover rounded-lg border-2 border-blue-300 shadow-lg" />
+                  <video ref={previewVideoRef} autoPlay playsInline muted className="w-full sm:w-64 h-48 sm:h-40 object-cover rounded-lg border-2 border-blue-300 shadow-lg" />
                   <div>
-                    <button onClick={stopPreview} className="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 font-medium shadow-md">Stop Preview</button>
+                    <button onClick={stopPreview} className="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700 font-medium shadow-md text-sm">Stop Preview</button>
                   </div>
                 </div>
               )}
@@ -268,7 +268,7 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
 
             <button
               onClick={startInterview}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-12 py-4 rounded-2xl shadow-xl shadow-blue-600/30 transition-all flex items-center gap-2 mx-auto"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-xl shadow-blue-600/30 transition-all flex items-center justify-center gap-2 mx-auto text-sm sm:text-base"
             >
               <Play className="w-5 h-5" /> Start Interview Session
             </button>
@@ -276,8 +276,8 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
         )}
 
         {isActive && (
-          <div className="space-y-6">
-            <div className="relative aspect-video bg-white rounded-3xl overflow-hidden border border-gray-300 shadow-2xl">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="relative aspect-[3/4] sm:aspect-video bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-300 shadow-2xl">
               {/* This video element will now correctly show the user once the stream is attached via useEffect */}
               <video
                 ref={videoRef}
@@ -287,59 +287,63 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 className="w-full h-full object-cover scale-x-[-1] bg-gray-100"
               />
 
-              <div className="absolute top-6 left-6 flex items-center gap-3">
-                <div className="bg-red-600 w-3 h-3 rounded-full animate-pulse" />
-                <span className="text-slate-900 text-sm font-bold bg-white/80 px-3 py-1 rounded-full backdrop-blur-md border border-gray-300">
-                  LIVE ANALYSIS ACTIVE
+              <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 sm:gap-3">
+                <div className="bg-red-600 w-2 h-2 sm:w-3 sm:h-3 rounded-full animate-pulse" />
+                <span className="text-slate-900 text-xs sm:text-sm font-bold bg-white/80 px-2 sm:px-3 py-1 rounded-full backdrop-blur-md border border-gray-300">
+                  LIVE
                 </span>
               </div>
 
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/90 p-4 rounded-2xl border border-gray-300 backdrop-blur-xl shadow-2xl">
-                <div className="flex flex-col items-center gap-1 px-4 border-r border-slate-700/50">
-                  <Smile className="w-5 h-5 text-blue-600" />
-                  <span className="text-[10px] text-slate-600 font-bold tracking-widest uppercase">Emotion</span>
-                  <span className="text-xs font-bold text-slate-900 uppercase">Analyzing...</span>
+              <div className="absolute bottom-4 left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-white/95 sm:bg-white/90 p-3 sm:p-4 rounded-2xl border border-gray-300 backdrop-blur-xl shadow-2xl">
+                <div className="flex w-full sm:w-auto justify-center gap-4 border-b sm:border-b-0 sm:border-r border-slate-200 sm:border-slate-700/50 pb-3 sm:pb-0 sm:pr-4">
+                  <div className="flex flex-col items-center gap-1">
+                    <Smile className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                    <span className="text-[10px] text-slate-600 font-bold tracking-widest uppercase">Emotion</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-900 uppercase">Analyzing...</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+                    <span className="text-[10px] text-slate-600 font-bold tracking-widest uppercase">Confidence</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-900">Detecting</span>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center gap-1 px-4 border-r border-slate-700/50">
-                  <Zap className="w-5 h-5 text-amber-600" />
-                  <span className="text-[10px] text-slate-600 font-bold tracking-widest uppercase">Confidence</span>
-                  <span className="text-xs font-bold text-slate-900">Detecting</span>
-                </div>
-                <div className="flex items-center gap-2 ml-2">
+
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:ml-2 w-full sm:w-auto">
                   {/* Video toggle */}
-                  <button onClick={toggleVideo} className={`p-3 rounded-xl ${cameraOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600'} transition-colors`}>
-                    {cameraOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+                  <button onClick={toggleVideo} className={`p-2 sm:p-3 rounded-xl ${cameraOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600'} transition-colors`}>
+                    {cameraOn ? <Video className="w-4 h-4 sm:w-5 sm:h-5" /> : <VideoOff className="w-4 h-4 sm:w-5 sm:h-5" />}
                   </button>
 
                   {/* Mic toggle */}
-                  <button onClick={toggleMic} className={`p-3 rounded-xl ${micOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600'} transition-colors`}>
-                    {micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
+                  <button onClick={toggleMic} className={`p-2 sm:p-3 rounded-xl ${micOn ? 'bg-gray-200 hover:bg-gray-300 text-slate-900' : 'bg-gray-100 text-slate-600'} transition-colors`}>
+                    {micOn ? <Mic className="w-4 h-4 sm:w-5 sm:h-5" /> : <MicOff className="w-4 h-4 sm:w-5 sm:h-5" />}
                   </button>
 
                   {/* Pause / Resume */}
                   {!paused ? (
-                    <button onClick={pauseInterview} className="px-3 py-2 rounded-xl bg-yellow-500 text-black font-bold">Pause</button>
+                    <button onClick={pauseInterview} className="px-3 py-2 rounded-xl bg-yellow-500 text-black font-bold text-xs sm:text-sm">Pause</button>
                   ) : (
-                    <button onClick={resumeInterview} className="px-3 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center gap-2"><Play className="w-4 h-4" /> Resume</button>
+                    <button onClick={resumeInterview} className="px-3 py-2 rounded-xl bg-emerald-600 text-white font-bold flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"><Play className="w-3 h-3 sm:w-4 sm:h-4" /> Resume</button>
                   )}
 
-                  <div className="px-3 text-sm text-slate-600">Elapsed: {Math.floor(elapsed / 60)}:{`${(elapsed % 60).toString().padStart(2, '0')}`}</div>
+                  <div className="px-2 text-xs sm:text-sm text-slate-600 font-mono">{Math.floor(elapsed / 60)}:{`${(elapsed % 60).toString().padStart(2, '0')}`}</div>
 
                   <button
                     onClick={endInterview}
                     disabled={loading}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-red-600/20"
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-red-600/20 text-xs sm:text-sm ml-auto sm:ml-0"
                   >
-                    {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <VideoOff className="w-5 h-5" />}
-                    Finish Session
+                    {loading ? <Loader2 className="animate-spin w-3 h-3 sm:w-4 sm:h-4" /> : <VideoOff className="w-4 h-4 sm:w-5 sm:h-5" />}
+                    <span className="hidden sm:inline">Finish</span>
+                    <span className="sm:hidden">End</span>
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-300 p-8 rounded-3xl text-center">
-              <h3 className="text-blue-700 text-sm font-bold uppercase tracking-widest mb-4">Prompt #1</h3>
-              <p className="text-xl text-slate-900 font-medium italic">
+            <div className="bg-blue-50 border border-blue-300 p-4 sm:p-8 rounded-2xl sm:rounded-3xl text-center">
+              <h3 className="text-blue-700 text-xs sm:text-sm font-bold uppercase tracking-widest mb-2 sm:mb-4">Prompt #1</h3>
+              <p className="text-lg sm:text-xl text-slate-900 font-medium italic leading-relaxed">
                 "Describe a situation where you had to work with a difficult team member. How did you handle it and what was the outcome?"
               </p>
             </div>
@@ -347,48 +351,48 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
         )}
 
         {session && (
-          <div className="animate-in fade-in zoom-in-95 duration-700 space-y-8 pb-12">
+          <div className="animate-in fade-in zoom-in-95 duration-700 space-y-6 sm:space-y-8 pb-12">
 
             {/* Recent performance (last 5) */}
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
               <h3 className="text-sm text-slate-600 font-bold uppercase tracking-widest">Recent (last 5)</h3>
-              <div className="flex gap-3 overflow-x-auto">
+              <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
                 {recentSessions.length === 0 && <span className="text-slate-600 text-sm">No history yet</span>}
                 {recentSessions.map((rs) => (
-                  <button key={rs.id} onClick={() => setSession(rs)} className="bg-gray-100 border border-gray-300 px-4 py-2 rounded-2xl text-left text-sm hover:bg-gray-200">
+                  <button key={rs.id} onClick={() => setSession(rs)} className="bg-gray-100 border border-gray-300 px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl text-left text-xs sm:text-sm hover:bg-gray-200 flex-shrink-0">
                     <div className="text-slate-900 font-bold">{new Date(rs.createdAt).toLocaleDateString()}</div>
-                    <div className="text-slate-600 text-xs">Confidence: <span className="font-bold text-emerald-600">{rs.confidenceScore}%</span></div>
+                    <div className="text-slate-600 text-[10px] sm:text-xs">Confidence: <span className="font-bold text-emerald-600">{rs.confidenceScore}%</span></div>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
               {[
                 { label: 'Confidence Score', value: session.confidenceScore, icon: Award, color: 'text-blue-600', bg: 'bg-blue-50' },
                 { label: 'Stress Level', value: session.stressLevel, icon: Zap, color: 'text-amber-600', bg: 'bg-amber-50' },
                 { label: 'Communication Clarity', value: session.clarityScore, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
               ].map((m, i) => (
-                <div key={i} className="bg-white border border-gray-300 p-8 rounded-3xl">
+                <div key={i} className="bg-white border border-gray-300 p-6 sm:p-8 rounded-2xl sm:rounded-3xl">
                   <div className="flex items-center gap-3 mb-4 text-slate-600 font-bold uppercase text-xs">
                     <div className={`${m.bg} p-2 rounded-lg`}>
                       <m.icon className={`w-4 h-4 ${m.color}`} />
                     </div>
                     {m.label}
                   </div>
-                  <div className="text-4xl font-black text-slate-900">{m.value}%</div>
+                  <div className="text-3xl sm:text-4xl font-black text-slate-900">{m.value}%</div>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white border border-gray-300 rounded-3xl p-8 shadow-xl">
-                <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+              <div className="bg-white border border-gray-300 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6 flex items-center gap-2">
                   <Award className="w-5 h-5 text-emerald-600" /> Key Strengths
                 </h2>
-                <ul className="space-y-4">
+                <ul className="space-y-3 sm:space-y-4">
                   {session.feedback.strengths.map((s, i) => (
-                    <li key={i} className="flex gap-3 text-slate-600">
+                    <li key={i} className="flex gap-3 text-slate-600 text-sm sm:text-base">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-2 flex-shrink-0" />
                       {s}
                     </li>
@@ -396,13 +400,13 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
                 </ul>
               </div>
 
-              <div className="bg-white border border-gray-300 rounded-3xl p-8 shadow-xl">
-                <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+              <div className="bg-white border border-gray-300 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-amber-600" /> Growth Areas
                 </h2>
-                <ul className="space-y-4">
+                <ul className="space-y-3 sm:space-y-4">
                   {session.feedback.weaknesses.map((w, i) => (
-                    <li key={i} className="flex gap-3 text-slate-600">
+                    <li key={i} className="flex gap-3 text-slate-600 text-sm sm:text-base">
                       <div className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-2 flex-shrink-0" />
                       {w}
                     </li>
@@ -411,19 +415,19 @@ const MockInterviews: React.FC<MockInterviewsProps> = ({ user }) => {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-300 p-1 rounded-3xl shadow-2xl">
-              <div className="bg-blue-600 p-8 rounded-[22px]">
-                <h2 className="text-xl font-bold text-white mb-6">Expert Interview Tips</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white border border-gray-300 p-1 rounded-2xl sm:rounded-3xl shadow-2xl">
+              <div className="bg-blue-600 p-6 sm:p-8 rounded-[18px] sm:rounded-[22px]">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6">Expert Interview Tips</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                   {session.feedback.tips.map((tip, i) => (
-                    <div key={i} className="bg-white/10 p-5 rounded-2xl border border-white/20 text-white/90 text-sm leading-relaxed backdrop-blur-sm">
+                    <div key={i} className="bg-white/10 p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-white/20 text-white/90 text-sm leading-relaxed backdrop-blur-sm">
                       {tip}
                     </div>
                   ))}
                 </div>
                 <button
                   onClick={() => setSession(null)}
-                  className="mt-8 text-blue-600 font-bold bg-white hover:bg-gray-100 px-8 py-3 rounded-xl transition-all shadow-xl"
+                  className="mt-6 sm:mt-8 text-blue-600 font-bold bg-white hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-xl transition-all shadow-xl w-full sm:w-auto text-sm sm:text-base"
                 >
                   Retake Interview
                 </button>

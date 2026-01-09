@@ -290,22 +290,34 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
             <label className="block text-lg font-semibold text-slate-900 mb-3">Skills</label>
             {editing ? (
               <div className="mt-2 space-y-3">
-                <div className="flex gap-2 items-center">
-                  <input
-                    value={skillInput}
-                    onChange={(e) => { setSkillInput(e.target.value); }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ',') {
-                        e.preventDefault();
-                        addSkill(skillInput);
-                        setSkillInput('');
-                      }
-                    }}
-                    onBlur={() => { addSkill(skillInput); setSkillInput(''); }}
-                    className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Type skill name and press Enter"
-                  />
-                  <button type="button" onClick={() => { addSkill(skillInput); setSkillInput(''); }} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors">Add</button>
+                {/* Skills Input & Select */}
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 flex gap-2">
+                    <input
+                      value={skillInput}
+                      onChange={(e) => { setSkillInput(e.target.value); }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ',') {
+                          e.preventDefault();
+                          addSkill(skillInput);
+                          setSkillInput('');
+                        }
+                      }}
+                      onBlur={() => { addSkill(skillInput); setSkillInput(''); }}
+                      className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Type skill..."
+                    />
+                    <button type="button" onClick={() => { addSkill(skillInput); setSkillInput(''); }} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors">Add</button>
+                  </div>
+                  <select
+                    onChange={(e) => { if (e.target.value) addSkill(e.target.value); e.target.value = ''; }}
+                    className="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 sm:w-48"
+                  >
+                    <option value="">Select Skill</option>
+                    {['JavaScript', 'TypeScript', 'React', 'Node.js', 'Python', 'AWS', 'Docker', 'SQL', 'Java', 'C++', 'Go', 'Rust', 'Angular', 'Vue', 'Next.js', 'Tailwind', 'MongoDB', 'PostgreSQL', 'Redis', 'GraphQL', 'Git', 'Linux', 'Kubernetes'].map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Added Skills Tags */}
@@ -319,16 +331,6 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
                     ))}
                   </div>
                 )}
-
-                {/* Suggested Skills */}
-                <div className="space-y-2">
-                  <p className="text-xs text-slate-600 font-semibold uppercase tracking-wide">Quick Add Suggestions</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {['JavaScript', 'TypeScript', 'React', 'Node.js', 'Python', 'AWS', 'Docker', 'SQL', 'Java', 'C++', 'Go', 'Rust'].map(s => (
-                      <button key={s} onClick={() => { addSkill(s); }} className="bg-gray-100 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm text-slate-900 border border-gray-300 hover:border-blue-400 transition-all text-center font-medium">{s}</button>
-                    ))}
-                  </div>
-                </div>
               </div>
             ) : (
               <div className="mt-2">
@@ -352,22 +354,33 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
             <label className="block text-lg font-semibold text-slate-900 mb-3">Interests</label>
             {editing ? (
               <div className="mt-2 space-y-3">
-                <div className="flex gap-2 items-center">
-                  <input
-                    value={interestInput}
-                    onChange={(e) => { setInterestInput(e.target.value); }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ',') {
-                        e.preventDefault();
-                        addInterest(interestInput);
-                        setInterestInput('');
-                      }
-                    }}
-                    onBlur={() => { addInterest(interestInput); setInterestInput(''); }}
-                    className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    placeholder="Type interest name and press Enter"
-                  />
-                  <button type="button" onClick={() => { addInterest(interestInput); setInterestInput(''); }} className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">Add</button>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 flex gap-2">
+                    <input
+                      value={interestInput}
+                      onChange={(e) => { setInterestInput(e.target.value); }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ',') {
+                          e.preventDefault();
+                          addInterest(interestInput);
+                          setInterestInput('');
+                        }
+                      }}
+                      onBlur={() => { addInterest(interestInput); setInterestInput(''); }}
+                      className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      placeholder="Type interest..."
+                    />
+                    <button type="button" onClick={() => { addInterest(interestInput); setInterestInput(''); }} className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">Add</button>
+                  </div>
+                  <select
+                    onChange={(e) => { if (e.target.value) addInterest(e.target.value); e.target.value = ''; }}
+                    className="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2.5 sm:w-48"
+                  >
+                    <option value="">Select Interest</option>
+                    {[...POPULAR_ROLES, 'Mobile Development', 'UI/UX Design', 'Cybersecurity', 'Blockchain', 'Cloud Computing', 'IoT', 'Game Development'].map(r => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Added Interests Tags */}
@@ -379,46 +392,6 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdate }) => {
                         <button onClick={() => setInterests(prev => prev.filter(p => p !== it))} className="hover:text-emerald-100 font-bold">✕</button>
                       </div>
                     ))}
-                  </div>
-                )}
-
-                {/* Suggested Interests */}
-                <div className="space-y-2">
-                  <p className="text-xs text-slate-600 font-semibold uppercase tracking-wide">Popular Roles</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {POPULAR_ROLES.map(r => (
-                      <button key={r} onClick={() => { addInterest(r); }} className="bg-gray-100 hover:bg-emerald-100 px-3 py-2 rounded-lg text-sm text-slate-900 border border-gray-300 hover:border-emerald-400 transition-all text-center font-medium">{r}</button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Filtered Suggestions from Database */}
-                {interestSuggestions.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-slate-600 font-semibold uppercase tracking-wide">Matching Suggestions</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {interestSuggestions
-                        .filter(s => {
-                          if (!interestInput) return false; // Only show if user is typing
-                          const norm = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
-                          const a = norm(s);
-                          const b = norm(interestInput);
-                          if (a.includes(b) || b.includes(a)) return true;
-                          const lev = (x: string, y: string) => {
-                            const m = x.length, n = y.length;
-                            const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
-                            for (let i = 0; i <= m; i++) dp[i][0] = i;
-                            for (let j = 0; j <= n; j++) dp[0][j] = j;
-                            for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) dp[i][j] = x[i - 1] === y[j - 1] ? dp[i - 1][j - 1] : Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
-                            return dp[m][n];
-                          };
-                          return lev(a, b) <= 2;
-                        })
-                        .slice(0, 12)
-                        .map(s => (
-                          <button key={s} onClick={() => { addInterest(s); }} className="bg-gray-100 hover:bg-emerald-100 px-3 py-2 rounded-lg text-sm text-slate-900 border border-gray-300 hover:border-emerald-400 transition-all text-center font-medium">{s}</button>
-                        ))}
-                    </div>
                   </div>
                 )}
               </div>

@@ -157,19 +157,19 @@ const StudyReminders: React.FC<StudyRemindersProps> = ({ userId }) => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
+        <div className="max-w-4xl mx-auto p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                    <div className="flex items-center gap-3 self-start sm:self-auto">
                         <Bell className="w-6 h-6 text-blue-600" />
-                        <h2 className="text-2xl font-bold text-slate-900">Study Reminders</h2>
+                        <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Study Reminders</h2>
                     </div>
-                    <div className="flex gap-2">
-                        <button onClick={testNotification} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    <div className="flex gap-2 w-full sm:w-auto justify-end">
+                        <button onClick={testNotification} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm sm:text-base">
                             <TestTube className="w-5 h-5" />
                             Test
                         </button>
-                        <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base">
                             <Plus className="w-5 h-5" />
                             Add
                         </button>
@@ -185,12 +185,12 @@ const StudyReminders: React.FC<StudyRemindersProps> = ({ userId }) => {
                     <div className="bg-blue-50 p-4 rounded-xl mb-6 border border-blue-200">
                         <input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g., Study DSA" className="w-full px-4 py-2 rounded-lg border border-gray-300 mb-3" />
 
-                        <div className="flex bg-white rounded-lg p-1 border border-gray-300 mb-3 w-fit">
-                            <button onClick={() => setIsRecurring(true)} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${isRecurring ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-gray-50'}`}>Weekly</button>
-                            <button onClick={() => setIsRecurring(false)} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${!isRecurring ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-gray-50'}`}>One-time Date</button>
+                        <div className="flex bg-white rounded-lg p-1 border border-gray-300 mb-3 w-full sm:w-fit">
+                            <button onClick={() => setIsRecurring(true)} className={`flex-1 sm:flex-none px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${isRecurring ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-gray-50'}`}>Weekly</button>
+                            <button onClick={() => setIsRecurring(false)} className={`flex-1 sm:flex-none px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${!isRecurring ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-gray-50'}`}>One-time Date</button>
                         </div>
 
-                        <div className="flex gap-3 mb-3">
+                        <div className="flex flex-col sm:flex-row gap-3 mb-3">
                             <input type="time" value={time} onChange={e => setTime(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300" />
                             {!isRecurring && (
                                 <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300" min={new Date().toISOString().split('T')[0]} />
@@ -200,7 +200,7 @@ const StudyReminders: React.FC<StudyRemindersProps> = ({ userId }) => {
                         {isRecurring && (
                             <div className="flex gap-2 mb-3 flex-wrap">
                                 {days.map((day, idx) => (
-                                    <button key={idx} onClick={() => setSelectedDays(prev => prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx])} className={`px-3 py-2 rounded-lg font-medium ${selectedDays.includes(idx) ? 'bg-blue-600 text-white' : 'bg-gray-200 text-slate-600'}`}>
+                                    <button key={idx} onClick={() => setSelectedDays(prev => prev.includes(idx) ? prev.filter(d => d !== idx) : [...prev, idx])} className={`px-3 py-2 rounded-lg font-medium text-sm flex-1 sm:flex-none ${selectedDays.includes(idx) ? 'bg-blue-600 text-white' : 'bg-gray-200 text-slate-600'}`}>
                                         {day}
                                     </button>
                                 ))}
@@ -215,8 +215,8 @@ const StudyReminders: React.FC<StudyRemindersProps> = ({ userId }) => {
 
                 <div className="space-y-3">
                     {reminders.map(reminder => (
-                        <div key={reminder.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100">
-                            <div className="flex-1">
+                        <div key={reminder.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-white rounded-xl border border-blue-100 gap-4">
+                            <div className="flex-1 w-full sm:w-auto">
                                 <h3 className="font-bold text-slate-900">{reminder.title}</h3>
                                 <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
                                     <Clock className="w-4 h-4" />
@@ -230,11 +230,11 @@ const StudyReminders: React.FC<StudyRemindersProps> = ({ userId }) => {
                                     )}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                                 <button onClick={() => editReminder(reminder)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg" title="Edit">
                                     <Edit2 className="w-5 h-5" />
                                 </button>
-                                <button onClick={() => toggleReminder(reminder.id)} className={`px-4 py-2 rounded-lg font-medium ${reminder.enabled ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
+                                <button onClick={() => toggleReminder(reminder.id)} className={`px-4 py-2 rounded-lg font-medium flex-1 sm:flex-none text-center ${reminder.enabled ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
                                     {reminder.enabled ? 'ON' : 'OFF'}
                                 </button>
                                 <button onClick={() => deleteReminder(reminder.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">

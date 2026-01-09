@@ -452,19 +452,24 @@ app.post('/api/study-chat', async (req, res) => {
     console.log(`💬 Study chat query: "${message.substring(0, 50)}..."`);
 
     try {
-      // System prompt to restrict to study-related topics only
-      const systemPrompt = `You are a helpful AI Assistant.
+      // System prompt - Updated to answer ALL safe questions (removed movie/entertainment restrictions)
+      const systemPrompt = `You are a helpful and intelligent AI Assistant.
       
-      Your rules are:
-      1. You must answer questions about ANY topic (Education, General Knowledge, Science, coding, definitions like "who is a physiotherapist", etc.).
-      2. STRICTLY REFUSE to answer any questions related to:
-         - Abuse, violence, hate speech, or harmful content.
-         - Movies, TV shows, entertainment, or celebrity gossip.
+      Your goal is to be helpful, friendly, and knowledgeable.
       
-      If the user asks about permitted topics, provide a clear, concise, and helpful answer.
-      If the user asks about blocked topics (abuse or movies), politely decline and explain that you cannot discuss those topics.
+      RULES:
+      1. You are allowed to answer questions about ANY topic, including:
+         - Education, Science, Coding, History
+         - General Knowledge, Pop Culture, Movies, Entertainment
+         - Personal advice (general), Daily chatter, Jokes
+      2. SAFETY FIRST: strictly REFUSE to answer questions related to:
+         - Promoting violence, self-harm, hate speech, or illegal acts.
+         - Explicit adult content.
       
-      Keep responses helpful and encouraging. Use emojis occasionally to make it friendly.`;
+      If the user asks about safe topics, provide a clear and engaging answer.
+      If the user asks about harmful/unsafe topics, firmly politely decline.
+      
+      Keep responses concise but helpful. Use emojis to be friendly!`;
 
       const fullPrompt = `${systemPrompt}\n\nUser question: ${message}`;
 
@@ -479,40 +484,37 @@ app.post('/api/study-chat', async (req, res) => {
     } catch (apiError) {
       console.error('⚠️ Gemini API error, using fallback:', apiError.message);
 
-      // Fallback responses for common study questions
+      // Enhanced Fallback Logic for Offline/Quota Limits
       const lowerMessage = message.toLowerCase();
       let response = '';
 
-      if (lowerMessage.includes('linked') && lowerMessage.includes('list')) {
-        response = "A **linked list** is a linear data structure where elements (nodes) are connected via pointers. Each node contains:\n• Data (the value)\n• Pointer to the next node\n\n**Advantages:**\n✅ Dynamic size\n✅ Easy insertion/deletion\n\n**Disadvantages:**\n❌ No random access\n❌ Extra memory for pointers\n\n**Types:** Singly, doubly, circular linked lists. 📚";
-      } else if (lowerMessage.includes('tree')) {
-        response = "**Trees** are hierarchical data structures consisting of nodes connected by edges.\n\n**Key Terms:**\n🌱 **Root:** Topmost node\n🌿 **Leaf:** Node with no children\n🌲 **Binary Tree:** Each node has at most 2 children\n\n**Used for:** File systems, HTML DOM, routing algorithms.";
-      } else if (lowerMessage.includes('stack')) {
-        response = "**Stack** is a linear data structure following **LIFO** (Last In, First Out).\n\n**Operations:**\n⬆️ **Push:** Add to top\n⬇️ **Pop:** Remove from top\n👀 **Peek:** View top element\n\n**Real-world ex:** Undo button, browser history, function calls.";
-      } else if (lowerMessage.includes('queue')) {
-        response = "**Queue** is a linear data structure following **FIFO** (First In, First Out).\n\n**Operations:**\n➡️ **Enqueue:** Add to rear\n⬅️ **Dequeue:** Remove from front\n\n**Real-world ex:** Printer jobs, customer service lines, CPU scheduling.";
-      } else if (lowerMessage.includes('graph')) {
-        response = "**Graphs** are non-linear structures made of Vertices (nodes) and Edges (connections).\n\n**Types:**\n• Directed vs Undirected\n• Weighted vs Unweighted\n\n**Algorithms:**\n🔍 **BFS:** Breadth-First Search (Layer by layer)\n🕵️ **DFS:** Depth-First Search (Deep dive)";
-      } else if (lowerMessage.includes('sort')) {
-        response = "**Sorting Algorithms** arrange data in order.\n\n**Common types:**\n🐢 **Bubble Sort:** Simple, slow O(n²)\n⚡ **Quick Sort:** Fast, divide & conquer O(n log n)\n🤝 **Merge Sort:** Stable, reliable O(n log n)\n\nSelection depends on data size and memory!";
-      } else if (lowerMessage.includes('binary') && lowerMessage.includes('search')) {
-        response = "**Binary Search** finds an item in a sorted array efficiently.\n\n**Steps:**\n1. Compare target with middle\n2. If equal, found!\n3. If target < middle, search left\n4. If target > middle, search right\n\n**Time:** O(log n) ⚡\n**Requirement:** Array must be sorted! 🎯";
-      } else if (lowerMessage.includes('sql') || lowerMessage.includes('database')) {
-        response = "**Databases** store organized data.\n\n**SQL (Relational):** Tables, rows, columns (e.g., PostgreSQL, MySQL). Good for structured data.\n**NoSQL (Non-relational):** Documents, key-pairs (e.g., MongoDB). Flexible and scalable.\n\n**Key Concept:** ACID properties ensure reliability.";
-      } else if (lowerMessage.includes('oop') || lowerMessage.includes('object')) {
-        response = "**Object-Oriented Programming (OOP)** is a paradigm based on 'objects'.\n\n**4 Pillars:**\n🔒 **Encapsulation:** Hiding data\n🧬 **Inheritance:** Parent/Child classes\n🎭 **Polymorphism:** Many forms\n🧩 **Abstraction:** Hiding complexity";
-      } else if (lowerMessage.includes('physiotherapist') || lowerMessage.includes('physical therapy')) {
-        response = "**A Physiotherapist** is a healthcare professional who helps people affected by injury, illness or disability through movement and exercise, manual therapy, education and advice. 🏥\n\nThey facilitate recovery and help people remain independent for as long as possible.";
-      } else if (lowerMessage.includes('anthropologist') || lowerMessage.includes('anthropology')) {
-        response = "**An Anthropologist** is a scientist who studies humans, human behavior, and societies in the past and present. 🌍\n\nThey explore what makes us human, from our biological evolution to our diverse cultures and social practices.";
-      } else if (lowerMessage.includes('stress') || lowerMessage.includes('anxiety') || lowerMessage.includes('mental') || lowerMessage.includes('burnout')) {
-        response = "**Managing Academic Stress:** 🧘\n\n1. **Take Breaks:** Rest is productive.\n2. **Sleep Well:** Your brain needs it to learn.\n3. **Talk to Someone:** Friends, family, or counselors.\n4. **Exercise:** Even a short walk helps.\n\nYou've got this! Take it one step at a time. 🌟";
-      } else if (lowerMessage.includes('study') || lowerMessage.includes('tips')) {
-        response = "**Proven Study Techniques:**\n\n1. **Active Recall** 🧠 - Test yourself\n2. **Spaced Repetition** 📅 - Review at intervals\n3. **Pomodoro** ⏰ - 25min focus + 5min break\n4. **Teach Others** 👥 - Explain concepts\n5. **Practice** ✍️ - Apply knowledge\n\nConsistency beats cramming! 💪";
-      } else if (lowerMessage.match(/^(hi|hello|hey|greetings)/)) {
-        response = "Hello there! 👋\n\nI'm ready to help you with any question you have, from academic topics to general knowledge! (Currently running in limited Offline Mode 📡)";
+      // Expanded keyword matching
+      if (lowerMessage.match(/(hi|hello|hey|greetings|sup|yo)/)) {
+        response = "Hello! 👋 I'm your AI Assistant. I'm currently running in limited mode due to server capacity, but I'm here to help!";
       } else if (lowerMessage.includes('how are you')) {
-        response = "I'm doing great, thanks for asking! 🤖\n\nI'm operating in offline mode right now, but I'm still happy to chat about what I know!";
+        response = "I'm doing well, thank you! 🤖 Just a bit busy on the server side, but ready to chat!";
+      } else if (lowerMessage.includes('linked') && lowerMessage.includes('list')) {
+        response = "A **linked list** is a linear data structure where elements (nodes) are connected via pointers. Each node contains:\n• Data (the value)\n• Pointer to the next node\n\n**Advantages:**\n✅ Dynamic size, Easy insertion/deletion\n**Disadvantages:**\n❌ No random access, Extra memory\n\n**Types:** Singly, Doubly, Circular linked lists. 🔗";
+      } else if (lowerMessage.includes('tree')) {
+        response = "**Trees** are hierarchical data structures with nodes and edges.\n\n**Key Terms:**\n🌱 **Root:** Topmost node\n🌿 **Leaf:** Node with no children\n🌲 **Binary Tree:** Max 2 children per node\n\nUsed in: File systems, HTML DOM, decision making.";
+      } else if (lowerMessage.includes('stack')) {
+        response = "**Stack** follows **LIFO** (Last In, First Out).\n\n**Operations:**\n⬆️ Push (Add)\n⬇️ Pop (Remove)\n👀 Peek (View top)\n\nExamples: Undo button, function call stack. 📚";
+      } else if (lowerMessage.includes('queue')) {
+        response = "**Queue** follows **FIFO** (First In, First Out).\n\n**Operations:**\n➡️ Enqueue (Add)\n⬅️ Dequeue (Remove)\n\nExamples: Printer jobs, ticket lines. 🚶";
+      } else if (lowerMessage.includes('graph')) {
+        response = "**Graphs** have Vertices (nodes) and Edges (connections).\n\n**Algorithms:**\n• BFS (Breadth-First Search)\n• DFS (Depth-First Search)\n• Dijkstra's (Shortest Path)\n\nUsed in: Maps, Social Networks, Routing. 🕸️";
+      } else if (lowerMessage.includes('sort')) {
+        response = "**Sorting Algorithms:**\n\n🐢 **Bubble Sort:** O(n²) - Simple swap\n⚡ **Quick Sort:** O(n log n) - Divide & conquer\n🤝 **Merge Sort:** O(n log n) - Stable\n\nChoose based on your data size! 🔢";
+      } else if (lowerMessage.includes('sql') || lowerMessage.includes('database')) {
+        response = "**Databases** store data.\n\n**SQL:** Structured, relational (tables). Ex: MySQL, PostgreSQL.\n**NoSQL:** Flexible, non-relational (documents). Ex: MongoDB.\n\nSQL is great for complex queries; NoSQL for scalability! 💾";
+      } else if (lowerMessage.includes('python')) {
+        response = "**Python** is a high-level, interpreted language known for readability.\n\n**Uses:** Web Dev (Django/Flask), Data Science (Pandas/NumPy), AI/ML (PyTorch/TensorFlow), Automation.\n\nIt's very beginner-friendly! 🐍";
+      } else if (lowerMessage.includes('javascript') || lowerMessage.includes('js')) {
+        response = "**JavaScript** is the language of the web.\n\n**Uses:**\n• Frontend (React, Vue)\n• Backend (Node.js)\n• Mobile (React Native)\n\nIt makes websites interactive! ⚡";
+      } else if (lowerMessage.includes('react')) {
+        response = "**React** is a JS library for building UIs.\n\n**Key Concepts:**\n• Components (Reusable UI parts)\n• Props (Pass data down)\n• State (Manage data locally)\n• Hooks (useEffect, useState)\n\nDeveloped by Facebook! ⚛️";
+      } else if (lowerMessage.includes('movie') || lowerMessage.includes('film') || lowerMessage.includes('actor')) {
+        response = "I love movies! 🎬 While I'm in offline mode, I can't look up specific recent films, but I can tell you that cinema is a great art form!";
       } else if (lowerMessage.includes('joke')) {
         const jokes = [
           "Why did the developer go broke? Because he used up all his cache! 💸",
@@ -520,14 +522,13 @@ app.post('/api/study-chat', async (req, res) => {
           "What do you call a fake noodle? An Impasta! 🍝"
         ];
         response = jokes[Math.floor(Math.random() * jokes.length)];
-      } else if (lowerMessage.includes('time') || lowerMessage.includes('date')) {
-        response = `The current system time is: ${new Date().toLocaleString()} ⌚`;
-      } else if (lowerMessage.includes('weather')) {
-        response = "I can't check the live weather right now ☁️, but usually looking out the window is the most accurate forecast! 😉";
-      } else if (lowerMessage.includes('food') || lowerMessage.includes('eat') || lowerMessage.includes('dinner')) {
-        response = "I don't eat, but I hear pizza 🍕 is a popular choice for humans! What's your favorite food?";
+      } else if (lowerMessage.includes('time')) {
+        response = `The time is: ${new Date().toLocaleTimeString()} ⌚`;
+      } else if (lowerMessage.includes('help')) {
+        response = "I can help with definitions, coding concepts, general knowledge, and more! Just ask. (Note: Some complex AI features are currently limited). 🆘";
       } else {
-        response = `I'm currently running in **Offline Mode** (API Quota reached). 📡\n\nI couldn't match your question to my offline database, but I can answer common questions about:\n\n• **General:** Hello, Jokes, Time, Weather\n• **Definitions:** Physiotherapist, Anthropologist\n• **CS Topics:** Stacks, Trees, Queues, Sorting, OOP, SQL\n\nPlease try one of these topics or wait for the connection to restore!`;
+        // Generic "I don't know" but friendly fallback
+        response = "I'm currently in **Limited Offline Mode** (connecting to AI server...). 📡\n\nI couldn't specifically answer that, but I can help with:\n• Coding (JS, Python, React, SQL)\n• CS Concepts (DSA, OOP, Networks)\n• General chat\n\nPlease try asking about one of these topics!";
       }
 
       res.json({ response });

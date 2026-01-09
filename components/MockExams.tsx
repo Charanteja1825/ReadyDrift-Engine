@@ -418,9 +418,9 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
   if (stage === 'running') {
     const q = questions[currentIndex];
     return (
-      <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm">
+      <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm w-full">
         <div className="bg-white p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200">
-          <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
+          <div className="flex items-center justify-between w-full sm:justify-start sm:w-auto gap-4">
             <span className="text-slate-700 font-semibold text-sm sm:text-base">Question {currentIndex + 1} of {questions.length}</span>
             <div className="flex items-center gap-2 text-slate-600 text-sm">
               <Clock className="w-4 h-4" />
@@ -434,15 +434,15 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
           </div>
         </div>
 
-        <div className="p-8 space-y-8">
+        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900">{q.question}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">{q.question}</h2>
             {q.type === 'coding' && (
               <>
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 font-mono text-slate-800 text-sm">
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 font-mono text-slate-800 text-sm overflow-x-auto">
                   // Implement your logic below...
                 </div>
-                <p className="text-sm text-slate-600 mt-2">Tip: Click inside the editor below and type your answer or paste code. Press Tab for indentation.</p>
+                <p className="text-xs sm:text-sm text-slate-600 mt-2">Tip: Click inside the editor below and type your answer or paste code. Press Tab for indentation.</p>
               </>
             )}
           </div>
@@ -453,12 +453,12 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
                 <button
                   key={i}
                   onClick={() => setAnswers({ ...answers, [q.id]: opt })}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${answers[q.id] === opt
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 bg-white text-slate-700 hover:border-gray-300'
+                  className={`w-full text-left p-3 sm:p-4 rounded-xl border transition-all text-sm sm:text-base ${answers[q.id] === opt
+                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 bg-white text-slate-700 hover:border-gray-300'
                     }`}
                 >
-                  <span className="mr-3 text-slate-500 font-bold">{String.fromCharCode(65 + i)}.</span>
+                  <span className="mr-2 sm:mr-3 text-slate-500 font-bold">{String.fromCharCode(65 + i)}.</span>
                   {opt}
                 </button>
               ))
@@ -467,7 +467,7 @@ const MockExams: React.FC<MockExamsProps> = ({ user }) => {
               <textarea
                 name={`answer-${q.id}`}
                 aria-label="Answer"
-                className="w-full bg-white border border-gray-200 rounded-xl p-4 text-slate-700 font-sans focus:outline-none focus:ring-1 focus:ring-blue-600 h-32"
+                className="w-full bg-white border border-gray-200 rounded-xl p-3 sm:p-4 text-slate-700 font-sans focus:outline-none focus:ring-1 focus:ring-blue-600 h-32 sm:h-48 text-sm sm:text-base"
                 placeholder="Write your detailed explanation here..."
                 value={answers[q.id] ?? ''}
                 onKeyDown={handleKeyPress}
